@@ -14,6 +14,8 @@
 ; Example .......: No
 ; ===============================================================================================================================
 ;
+Global $SlotLightningSpell = -1, $SlotHealSpell = -1, $SlotRageSpell = -1, $SlotJumpSpell = -1, $SlotFreezeSpell = -1, $SlotCloneSpell = -1
+Global $SlotPoisonSpell = -1, $SlotHasteSpell = -1, $SlotEarthSpell = -1, $SlotSkeletonSpell = -1
 Func getArmySpellCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $test = False)
 
 	If $debugsetlogTrain = 1 Or $debugSetlog = 1 Then SETLOG("Begin getArmySpellCount:", $COLOR_PURPLE)
@@ -28,6 +30,7 @@ Func getArmySpellCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 		EndIf
 		If _Sleep($iDelaycheckArmyCamp5) Then Return
 	EndIf
+
 
 	Local $iTotalSpellSpace = 0, $iMissingSpellEvent = 0, $iMissingSpellCount = 0
 	Local $SpellQ, $Result, $FullTemp
@@ -45,6 +48,18 @@ Func getArmySpellCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 		$CurEarthSpell = 0
 		$CurSkeletonSpell = 0
 		$CurTotalSpell = True
+		
+		$SlotLightningSpell = -1 ; Reset Slots
+		$SlotHealSpell = -1
+		$SlotRageSpell = -1
+		$SlotJumpSpell = -1
+		$SlotFreezeSpell = -1
+		$SlotCloneSpell = -1
+		$SlotPoisonSpell = -1
+		$SlotHasteSpell = -1
+		$SlotEarthSpell = -1
+		$SlotSkeletonSpell = -1
+		
 
 		For $i = 0 To 4 ; 5 visible slots in ArmyOverView window
 			If $debugsetlogTrain = 1 Then Setlog(" Slot : " & $i + 1, $COLOR_PURPLE)
@@ -62,42 +77,52 @@ Func getArmySpellCount($bOpenArmyWindow = False, $bCloseArmyWindow = False, $tes
 			Select
 				Case $FullTemp = "Lightning"
 					$CurLightningSpell = $SpellQ
+					$SlotLightningSpell = $i
 					Setlog(" - No. of Lightning Spells: " & $SpellQ)
 					$iTotalSpellSpace += (2 * $SpellQ)
 				Case $FullTemp = "Heal"
 					$CurHealSpell = $SpellQ
+					$SlotHealSpell = $i
 					Setlog(" - No. of Heal Spells: " & $SpellQ)
 					$iTotalSpellSpace += (2 * $SpellQ)
 				Case $FullTemp = "Rage"
 					$CurRageSpell = $SpellQ
+					$SlotRageSpell = $i
 					Setlog(" - No. of Rage Spells: " & $SpellQ)
 					$iTotalSpellSpace += (2 * $SpellQ)
 				Case $FullTemp = "Jump"
 					$CurJumpSpell = $SpellQ
+					$SlotJumpSpell = $i
 					Setlog(" - No. of Jump Spells: " & $SpellQ)
 					$iTotalSpellSpace += (2 * $SpellQ)
 				Case $FullTemp = "Freeze"
 					$CurFreezeSpell = $SpellQ
+					$SlotFreezeSpell = $i
 					Setlog(" - No. of Freeze Spells: " & $SpellQ)
 					$iTotalSpellSpace += (2 * $SpellQ)
 				Case $FullTemp = "Clone"
 					$CurCloneSpell = $SpellQ
+					$SlotCloneSpell = $i
 					Setlog(" - No. of Clone Spells: " & $SpellQ)
 					$iTotalSpellSpace += (4 * $SpellQ)
 				Case $FullTemp = "Poison"
 					$CurPoisonSpell = $SpellQ
+					$SlotPoisonSpell = $i
 					Setlog(" - No. of Poison Spells: " & $SpellQ)
 					$iTotalSpellSpace += $SpellQ
 				Case $FullTemp = "Haste"
 					$CurHasteSpell = $SpellQ
+					$SlotHasteSpell = $i
 					Setlog(" - No. of Haste Spells: " & $SpellQ)
 					$iTotalSpellSpace += $SpellQ
 				Case $FullTemp = "Earth"
 					$CurEarthSpell = $SpellQ
+					$SlotEarthSpell = $i
 					Setlog(" - No. of Earthquake Spells: " & $SpellQ)
 					$iTotalSpellSpace += $SpellQ
 				Case $FullTemp = "Skeleton"
 					$CurSkeletonSpell = $SpellQ
+					$SlotSkeletonSpell = $i
 					Setlog(" - No. of Skeleton Spells: " & $SpellQ)
 					$iTotalSpellSpace += $SpellQ
 				Case $FullTemp = "" And $SpellQ > 0 ; prevent no search condition due problem with spell type detection

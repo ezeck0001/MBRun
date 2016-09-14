@@ -744,7 +744,7 @@ Func getArmyNormalTroopCount()
 
 EndFunc   ;==>getArmyNormalTroopCount
 
-Func TrainDarkTroops()
+Func TrainDarkTroopsBoosted()
 
 	SetLog("Func TrainDarkTroopsBoosted ", $COLOR_PURPLE) ; If $debugsetlogTrain = 1 Then
 
@@ -902,7 +902,7 @@ Func TrainDarkTroops()
 
 	; Lets verify what Barracks are Boosted and use it first! adding a small time to the no Boosted Barrack
 	For $i = 0 To ($numDarkBarracksAvailable - 1)
-		If $BarrackDarkTotalStatus[$i][3] = 0 then
+		If $BarrackDarkTotalStatus[$i][3] = 0 Then
 			$BarrackDarkTotalStatus[$i][0] = 20
 		EndIf
 	Next
@@ -1439,3 +1439,6 @@ Func GoesToFirstDarkBarrack()
 
 EndFunc   ;==>GoesToFirstDarkBarrack
 
+Func DeleteQueueTroopsOnBoostedBarracks()
+
+EndFunc   ;==>DeleteQueueTroopsOnBoostedBarracks
