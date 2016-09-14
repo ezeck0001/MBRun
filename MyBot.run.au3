@@ -40,6 +40,7 @@ $sBotTitle = "My Bot " & $sBotVersion & " " ;~ Don't use any non file name suppo
 
 #include "COCBot\functions\Config\DelayTimes.au3"
 #include "COCBot\MBR Global Variables.au3"
+
 _GDIPlus_Startup()
 #include "COCBot\GUI\MBR GUI Design Splash.au3"
 #include "COCBot\functions\Config\ScreenCoordinates.au3"
@@ -53,7 +54,6 @@ Opt("WinTitleMatchMode", 3) ; Window Title exact match mode
 If Not FileExists(@ScriptDir & "\License.txt") Then
 	$license = InetGet("http://www.gnu.org/licenses/gpl-3.0.txt", @ScriptDir & "\License.txt")
 EndIf
-
 ;multilanguage
 #include "COCBot\functions\Other\Multilanguage.au3"
 DetectLanguage()
@@ -76,6 +76,7 @@ EndIf
 
 #include "COCBot\functions\Android\Android.au3"
 #include "COCBot\functions\Android\SecureME.au3"
+
 
 ; Update Bot title
 $sBotTitle = $sBotTitle & "(" & ($AndroidInstance <> "" ? $AndroidInstance : $Android) & ")" ;Do not change this. If you do, multiple instances will not work.
@@ -109,27 +110,21 @@ If $AndroidInstance <> "" Then
 	$sAndroidInfo = $sAndroidInfo2
 EndIf
 
-$sMsg = GetTranslated(500, 5, "My Bot for %s is already running.\r\n\r\n", $sAndroidInfo)
-If $hMutex_BotTitle = 0 Then
-	RemoveFolderFromInUseList()
-	DeletePicturesHostFolder()
+;$sMsg = GetTranslated(500, 5, "My Bot for %s is already running.\r\n\r\n", $sAndroidInfo)
+
+
+$hMutex_Profile = _Singleton(StringReplace($sProfilePath & "\" & $sCurrProfile, "\", "-"), 1)
+$sMsg = GetTranslated(500, 6, "My Bot with Profile %s is already running in %s.\r\n\r\n", $sCurrProfile, $sProfilePath & "\" & $sCurrProfile)
+If $hMutex_Profile = 0 Then
+	_WinAPI_CloseHandle($hMutex_BotTitle)
 	If IsHWnd($hSplash) Then GUIDelete($hSplash) ; Delete the splash screen since we don't need it anymore
 	MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST), $sBotTitle, $sMsg & $cmdLineHelp)
 	_GDIPlus_Shutdown()
 	Exit
 EndIf
 
-$hMutex_Profile = _Singleton(StringReplace($sProfilePath & "\" & $sCurrProfile, "\", "-"), 1)
-$sMsg = GetTranslated(500, 6, "My Bot with Profile %s is already running in %s.\r\n\r\n", $sCurrProfile, $sProfilePath & "\" & $sCurrProfile)
-If $hMutex_Profile = 0 Then
-    _WinAPI_CloseHandle($hMutex_BotTitle)
-    If IsHWnd($hSplash) Then GUIDelete($hSplash) ; Delete the splash screen since we don't need it anymore
-    MsgBox(BitOR($MB_OK, $MB_ICONINFORMATION, $MB_TOPMOST), $sBotTitle, $sMsg & $cmdLineHelp)
-    _GDIPlus_Shutdown()
-    Exit
-EndIf
-
 $hMutex_MyBot = _Singleton("MyBot.run", 1)
+
 $OnlyInstance = $hMutex_MyBot <> 0 ; And False
 SetDebugLog("My Bot is " & ($OnlyInstance ? "" : "not ") & "the only running instance")
 
@@ -186,6 +181,7 @@ LoadAmountOfResourcesImages()
 
 ;~ InitializeVariables();initialize variables used in extra windows
 CheckVersion() ; check latest version on mybot.run site
+btnUpdateProfile() ; SwitchAcc - DEMEN
 SetComboTroopComp()
 
 ;~ Remember time in Milliseconds bot launched
@@ -199,6 +195,7 @@ EndIf
 
 ;~ Restore process priority
 ProcessSetPriority(@AutoItPID, $iBotProcessPriority)
+
 
 ;AutoStart Bot if request
 AutoStart()
@@ -221,10 +218,22 @@ While 1
 WEnd
 
 Func runBot() ;Bot that runs everything in order
+
+	If $ClrTroops = 1 Then
+		ClrTroops()
+	EndIf
+
+	If $ichkSwitchAcc = 1 And $bReMatchAcc = True Then 				; SwitchAcc - DEMEN
+	  $nCurProfile = _GUICtrlCombobox_GetCurSel($cmbProfile) + 1
+	  Setlog("Rematching Profile [" & $nCurProfile &"] - " & $ProfileList[$nCurProfile] & " (CoC Acc. " & $aMatchProfileAcc[$nCurProfile-1] & ")")
+	  SwitchCoCAcc()
+	  $bReMatchAcc = False
+   EndIf
 	$TotalTrainedTroops = 0
 	Local $Quickattack = False
 	Local $iWaitTime
 	While 1
+
 		$Restart = False
 		$fullArmy = False
 		$CommandStop = -1
@@ -270,8 +279,8 @@ Func runBot() ;Bot that runs everything in order
 				If _Sleep($iDelayRunBot5) Then Return
 			checkMainScreen(False)
 				If $Restart = True Then ContinueLoop
-			IF $FirstStart then RunFirstAndDeleteQueuedTroops()
 			Local $aRndFuncList[3] = ['Collect', 'CheckTombs', 'ReArm']
+			IF $FirstStart then RunFirstAndDeleteQueuedTroops()
 			While 1
 				If $RunState = False Then Return
 				If $Restart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
@@ -288,10 +297,8 @@ Func runBot() ;Bot that runs everything in order
 			WEnd
 				If $RunState = False Then Return
 				If $Restart = True Then ContinueLoop
-			DonateCC()
-			If _Sleep($iDelayRunBot3) Then Return
 			If IsSearchAttackEnabled() Then  ; if attack is disabled skip reporting, requesting, donating, training, and boosting
-			   Local $aRndFuncList[6] = ['ReplayShare', 'ReportNotify', 'BoostBarracks', 'BoostSpellFactories', 'BoostHeroes', 'RequestCC']
+			   Local $aRndFuncList[7] = ['ReplayShare', 'ReportNotify', 'DonateCC,Train', 'BoostBarracks', 'BoostSpellFactories', 'BoostHeroes', 'RequestCC']
 			   While 1
 				   If $RunState = False Then Return
 				   If $Restart = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
@@ -306,16 +313,13 @@ Func runBot() ;Bot that runs everything in order
 				   EndIf
 				   If checkAndroidTimeLag() = True Then ContinueLoop 2 ; must be level 2 due to loop-in-loop
 			   WEnd
+If $ichkSwitchAcc = 1 And $aProfileType[$nCurProfile-1] = 2 Then checkSwitchAcc()  		;  Switching to active account after donation - SwitchAcc for  - DEMEN
 					If $RunState = False Then Return
 					If $Restart = True Then ContinueLoop
 			   If $iUnbreakableMode >= 1 Then
 					If Unbreakable() = True Then ContinueLoop
 				EndIf
 			EndIf
-				If $RunState = False Then Return
-				If _Sleep($iDelayRunBot3) Then Return
-			Train()
-				If $Restart = True Then ContinueLoop
 			Local $aRndFuncList[3] = ['Laboratory', 'UpgradeHeroes', 'UpgradeBuilding']
 			While 1
 				If $RunState = False Then Return
@@ -394,7 +398,7 @@ Func Idle() ;Sequence that runs until Full Army
 	Local $TimeIdle = 0 ;In Seconds
 	If $debugsetlog = 1 Then SetLog("Func Idle ", $COLOR_PURPLE)
 
-	While $IsFullArmywithHeroesAndSpells = False
+	While $fullArmy = False Or $bFullArmyHero = False Or $bFullArmySpells = False
 		checkAndroidTimeLag()
 
 		If $RequestScreenshot = 1 Then PushMsg("RequestScreenshot")
@@ -479,9 +483,9 @@ Func Idle() ;Sequence that runs until Full Army
 
 		If $canRequestCC = True Then RequestCC()
 
-		If $CurCamp >=  $TotalCamp * $iEnableAfterArmyCamps[$DB]/100 and $iEnableSearchCamps[$DB]  = 1 and IsSearchModeActive($DB) Then Exitloop
-		If $CurCamp >=  $TotalCamp * $iEnableAfterArmyCamps[$LB]/100 and $iEnableSearchCamps[$LB]  = 1 and IsSearchModeActive($LB) Then Exitloop
-		If $CurCamp >=  $TotalCamp * $iEnableAfterArmyCamps[$TS]/100 and $iEnableSearchCamps[$TS]  = 1 and IsSearchModeActive($TS) Then Exitloop
+		If $CurCamp >=  $TotalCamp * $iEnableAfterArmyCamps[$DB]/100 and $iEnableSearchCamps[$DB]  = 1 Then Exitloop
+		If $CurCamp >=  $TotalCamp * $iEnableAfterArmyCamps[$LB]/100 and $iEnableSearchCamps[$LB]  = 1 Then Exitloop
+		If $CurCamp >=  $TotalCamp * $iEnableAfterArmyCamps[$TS]/100 and $iEnableSearchCamps[$TS]  = 1 Then Exitloop
 
 		SetLog("Time Idle: " & StringFormat("%02i", Floor(Floor($TimeIdle / 60) / 60)) & ":" & StringFormat("%02i", Floor(Mod(Floor($TimeIdle / 60), 60))) & ":" & StringFormat("%02i", Floor(Mod($TimeIdle, 60))))
 
@@ -490,9 +494,11 @@ Func Idle() ;Sequence that runs until Full Army
 
 		If $iChkSnipeWhileTrain = 1 Then SnipeWhileTrain()  ;snipe while train
 
-		If $CommandStop = -1 Then ; Check if closing bot/emulator while training and not in halt mode
-			SmartWait4Train()
-			If $Restart = True Then ExitLoop ; if smart wait activated, exit to runbot in case user adjusted GUI or left emulator/bot in bad state
+;		If $ichkSwitchAcc = 1 Then checkSwitchAcc()		; SwitchAcc - DEMEN
+		If $CommandStop = -1 And $ichkSwitchAcc = 1 Then
+		   checkSwitchAcc()					; SwitchAcc - DEMEN
+		ElseIf $ichkSwitchAcc <> 1 Then		; SwitchAcc - DEMEN
+		   SmartWait4Train()  ; Check if closing bot/emulator while training and not in halt mode
 		EndIf
 
 	WEnd
@@ -535,6 +541,7 @@ Func AttackMain() ;Main control for attack functions
 		Else
 			Setlog("No one of search condition match:", $COLOR_BLUE)
 			Setlog("Waiting on troops, heroes and/or spells according to search settings", $COLOR_BLUE)
+			If $ichkSwitchAcc = 1 Then CheckSwitchAcc() 		; SwitchAcc - DEMEN
 			GetReadTimeHeroesAndSpell()
 		EndIf
 	Else
@@ -611,6 +618,11 @@ Func _RunFunction($action)
 		Case "DonateCC"
 			DonateCC()
 			If _Sleep($iDelayRunBot1) = False Then checkMainScreen(False)
+		Case "DonateCC,Train"
+			DonateCC()
+			If _Sleep($iDelayRunBot1) = False Then checkMainScreen(False)
+			Train()
+			_Sleep($iDelayRunBot1)
 		Case "BoostBarracks"
 			BoostBarracks()
 			BoostDarkBarracks()
