@@ -12,7 +12,7 @@
 
 Func BotDetectFirstTime()
 
-	Local $collx, $colly, $Result, $i = 0, $t = 0
+	Local $collx, $colly, $Result, $i = 0 , $t =0
 
 	If $Is_ClientSyncError = True Then Return ; if restart after OOS, and User stop/start bot, skip this.
 
