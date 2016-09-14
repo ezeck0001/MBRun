@@ -22,7 +22,30 @@ Func cmbTroopComp()
 		For $i = 0 To UBound($TroopDarkName) - 1
 			Assign("Cur" & $TroopDarkName[$i], 1)
 		Next
+		For $i = 0 To UBound($TroopName) - 1
+			Assign("War" & $TroopName[$i], 1)
+		Next
+		For $i = 0 To UBound($TroopDarkName) - 1
+			Assign("War" & $TroopDarkName[$i], 1)
+		Next
+		If _GUICtrlComboBox_GetCurSel($cmbTroopComp) = 10 Then
+			_GUICtrlComboBox_SetCurSel($cmbDarkTroopComp, 3)
+			cmbDarkTroopComp()
+		EndIf
+		If _GUICtrlComboBox_GetCurSel($cmbTroopComp) = 9 Then
+			_GUICtrlComboBox_SetCurSel($cmbDarkTroopComp, 1)
+			cmbDarkTroopComp()
+		EndIf
+		If _GUICtrlComboBox_GetCurSel($cmbTroopComp) = 8 Then
+			_GUICtrlComboBox_SetCurSel($cmbDarkTroopComp, 0)
+			cmbDarkTroopComp()
+		EndIf
+		If _GUICtrlComboBox_GetCurSel($cmbTroopComp) < 8 Then
+			_GUICtrlComboBox_SetCurSel($cmbDarkTroopComp, 2)
+			cmbDarkTroopComp()
+		EndIf
 		SetComboTroopComp()
+
 	EndIf
 EndFunc   ;==>cmbTroopComp
 
@@ -40,15 +63,30 @@ Func SetComboDarkTroopComp()
 		Case 0
 			;show all the barrack mode controls
 			HideDarkCustomControls()
+			HideDarkWarControls()
 			ShowDarkBarrackControls()
+			GUICtrlSetState($btnClrDarkElixir, $GUI_HIDE)
 		Case 1
 			;show custom mode controls
 			HideDarkBarrackControls()
+			HideDarkWarControls()
 			ShowDarkCustomControls()
+			GUICtrlSetState($btnClrDarkElixir, $GUI_SHOW)
+
 		Case 2
 			;Hide All
 			HideDarkBarrackControls()
 			HideDarkCustomControls()
+			HideDarkWarControls()
+			GUICtrlSetState($btnClrDarkElixir, $GUI_HIDE)
+
+
+		Case 3
+			;show War mode controls
+			HideDarkBarrackControls()
+			HideDarkCustomControls()
+			ShowDarkWarControls()
+			GUICtrlSetState($btnClrDarkElixir, $GUI_SHOW)
 	EndSwitch
 	SetRedrawBotWindow($bWasRedraw)
 EndFunc   ;==>SetComboDarkTroopComp
@@ -66,6 +104,14 @@ Func ShowDarkCustomControls()
 	_GUI_Value_STATE("SHOW", $groupTroopsDark)
 EndFunc   ;==>ShowDarkCustomControls
 
+Func ShowDarkWarControls()
+	GUICtrlSetState($grpDarkTroops, $GUI_SHOW)
+	For $i = 0 To UBound($TroopDarkName) - 1
+		GUICtrlSetState(Eval("txtWar" & $TroopDarkName[$i]), $GUI_SHOW)
+	Next
+	_GUI_Value_STATE("SHOW", $groupTroopsDark)
+EndFunc   ;==>ShowDarkCustomControls
+
 Func HideDarkBarrackControls()
 	_GUI_Value_STATE("HIDE", $grpDarkBarrackMode & "#" & Eval("cmbDarkBarrack1") & "#" & Eval("cmbDarkBarrack2") & "#" & Eval("lblDarkBarrack1") & "#" & Eval("lblDarkBarrack2"))
 EndFunc   ;==>HideDarkBarrackControls
@@ -78,10 +124,27 @@ Func HideDarkCustomControls()
 	_GUI_Value_STATE("HIDE", $groupTroopsDark)
 EndFunc   ;==>HideDarkCustomControls
 
+Func HideDarkWarControls()
+	GUICtrlSetState($grpDarkTroops, $GUI_HIDE)
+	For $i = 0 To UBound($TroopDarkName) - 1
+		GUICtrlSetState(Eval("txtWar" & $TroopDarkName[$i]), $GUI_HIDE)
+	Next
+	_GUI_Value_STATE("HIDE", $groupTroopsDark)
+EndFunc   ;==>HideDarkCustomControls
+
+
 Func SetComboTroopComp()
+
 	Local $bWasRedraw = SetRedrawBotWindow(False)
 	HideBarrackControls()
 	HideCustomControls()
+	GUICtrlSetState($lblWar1, $GUI_HIDE)
+	GUICtrlSetState($lblWar2, $GUI_HIDE)
+	GUICtrlSetState($lblWar3, $GUI_HIDE)
+	_GUI_Value_STATE("HIDE", $groupListSpells)
+	_GUI_Value_STATE("HIDE", $groupListWarSpells)
+
+
 	Local $ArmyCampTemp = 0
 
 	If GUICtrlRead($chkTotalCampForced) = $GUI_CHECKED Then
@@ -97,12 +160,13 @@ Func SetComboTroopComp()
 			_GUI_Value_STATE("SHOW", $groupTroopsArch & "#" & $groupTroopsTot)
 			For $i = 0 To UBound($TroopName) - 1
 				GUICtrlSetData(Eval("txtNum" & $TroopName[$i]), "0")
+
 			Next
 			For $i = 0 To UBound($TroopDarkName) - 1
 				GUICtrlSetData(Eval("txtNum" & $TroopDarkName[$i]), "0")
 			Next
 			GUICtrlSetData($txtNumArch, $ArmyCampTemp)
-
+			_GUI_Value_STATE("SHOW", $groupListSpells)
 		Case 1
 			_GUI_Value_STATE("SHOW", $groupTroopsBarB & "#" & $groupTroopsTot)
 			For $i = 0 To UBound($TroopName) - 1
@@ -112,7 +176,7 @@ Func SetComboTroopComp()
 				GUICtrlSetData(Eval("txtNum" & $TroopDarkName[$i]), "0")
 			Next
 			GUICtrlSetData($txtNumBarb, $ArmyCampTemp)
-
+			_GUI_Value_STATE("SHOW", $groupListSpells)
 		Case 2
 			_GUI_Value_STATE("SHOW", $groupTroopsGobl & "#" & $groupTroopsTot)
 			For $i = 0 To UBound($TroopName) - 1
@@ -122,7 +186,7 @@ Func SetComboTroopComp()
 				GUICtrlSetData(Eval("txtNum" & $TroopDarkName[$i]), "0")
 			Next
 			GUICtrlSetData($txtNumGobl, $ArmyCampTemp)
-
+			_GUI_Value_STATE("SHOW", $groupListSpells)
 		Case 3
 			_GUI_Value_STATE("SHOW", $groupTroopsArch & "#" & $groupTroopsTot)
 			_GUI_Value_STATE("SHOW", $groupTroopsBarB & "#" & $groupTroopsTot)
@@ -134,6 +198,7 @@ Func SetComboTroopComp()
 			Next
 			GUICtrlSetData($txtNumBarb, Ceiling($ArmyCampTemp/2))
 			GUICtrlSetData($txtNumArch, Floor($ArmyCampTemp/2))
+			_GUI_Value_STATE("SHOW", $groupListSpells)
 		Case 4
 			_GUI_Value_STATE("SHOW", $groupTroopsArch & "#" & $groupTroopsTot)
 			_GUI_Value_STATE("SHOW", $groupTroopsBarB & "#" & $groupTroopsTot)
@@ -152,7 +217,7 @@ Func SetComboTroopComp()
 			GUICtrlSetData($txtNumBarb, Ceiling((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*60))
 			GUICtrlSetData($txtNumArch, Floor((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*30))
 			GUICtrlSetData($txtNumGobl, Ceiling((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*10))
-
+			_GUI_Value_STATE("SHOW", $groupListSpells)
 		Case 5
 			$TotalTroopsTOtrain = 0
 			_GUI_Value_STATE("SHOW", $groupTroopsArch & "#" & $groupTroopsTot)
@@ -170,7 +235,7 @@ Func SetComboTroopComp()
 
 			GUICtrlSetData($txtNumBarb, Ceiling((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*60))
 			GUICtrlSetData($txtNumArch, Floor((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*40))
-
+			_GUI_Value_STATE("SHOW", $groupListSpells)
 		Case 6
 			_GUI_Value_STATE("SHOW", $groupTroopsArch & "#" & $groupTroopsTot)
 			_GUI_Value_STATE("SHOW", $groupTroopsBarB & "#" & $groupTroopsTot)
@@ -184,6 +249,7 @@ Func SetComboTroopComp()
 			GUICtrlSetData($txtNumBarb, Ceiling((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*60))
 			GUICtrlSetData($txtNumArch, Floor((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*30))
 			GUICtrlSetData($txtNumGobl, Ceiling((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*10))
+			_GUI_Value_STATE("SHOW", $groupListSpells)
 		Case 7
 			$TotalTroopsTOtrain = 0
 			_GUI_Value_STATE("SHOW", $groupTroopsArch & "#" & $groupTroopsTot)
@@ -209,21 +275,35 @@ Func SetComboTroopComp()
 			GUICtrlSetData($txtNumBarb, Ceiling((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*60))
 			GUICtrlSetData($txtNumArch, Floor((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*30))
 			GUICtrlSetData($txtNumGobl, Ceiling((($ArmyCampTemp - $TotalTroopsTOtrain)/100)*10))
-
+			_GUI_Value_STATE("SHOW", $groupListSpells)
 		Case 8
 			;show all the barrack mode controls
+			GUICtrlSetState($btnClrElixir, $GUI_HIDE)
 			ShowBarrackControls()
 			For $i = 0 To UBound($TroopName) - 1
 				GUICtrlSetData(Eval("txtNum" & $TroopName[$i]), "0")
 			Next
+			_GUI_Value_STATE("SHOW", $groupListSpells)
 		Case 9
+			GUICtrlSetState($btnClrElixir, $GUI_SHOW)
 			_GUI_Value_STATE("SHOW", $groupTroops1)
 			_GUI_Value_STATE("SHOW", $groupTroops2)
-
+			_GUI_Value_STATE("SHOW", $groupListSpells)
+		Case 10
+			GUICtrlSetState($btnClrElixir, $GUI_SHOW)
+			_GUI_Value_STATE("SHOW", $groupTroops3)
+			_GUI_Value_STATE("SHOW", $groupTroops4)
+			_GUI_Value_STATE("SHOW", $groupListWarSpells)
+			GUICtrlSetState($lblWar1, $GUI_SHOW)
+			GUICtrlSetState($lblWar2, $GUI_SHOW)
+			GUICtrlSetState($lblWar3, $GUI_SHOW)
 	EndSwitch
 	lblTotalCount()
+	lblTotalCountSpell()
 	SetRedrawBotWindow($bWasRedraw)
+
 EndFunc   ;==>SetComboTroopComp
+
 
 Func HideBarrackControls()
 	_GUI_Value_STATE("HIDE", $grpBarrackMode & "#" & $cmbBarrack1 & "#" & $cmbBarrack2 & "#" & $cmbBarrack3 & "#" & $cmbBarrack4)
@@ -231,20 +311,84 @@ Func HideBarrackControls()
 EndFunc   ;==>HideBarrackControls
 
 Func HideCustomControls()
-	For $i = 0 To UBound($TroopName) - 1
-		GUICtrlSetState(Eval("txtNum" & $TroopName[$i]), $GUI_HIDE)
-	Next
+;	For $i = 0 To UBound($TroopName) - 1
+;		GUICtrlSetState(Eval("txtNum" & $TroopName[$i]), $GUI_HIDE)
+;	Next
 	_GUI_Value_STATE("HIDE", $groupTroops1)
 	_GUI_Value_STATE("HIDE", $groupTroops2)
+	_GUI_Value_STATE("HIDE", $groupTroops3)
+	_GUI_Value_STATE("HIDE", $groupTroops4)
+
 EndFunc   ;==>HideCustomControls
 
 Func ShowBarrackControls()
 	_GUI_Value_STATE("SHOW", $grpBarrackMode & "#" & $cmbBarrack1 & "#" & $cmbBarrack2 & "#" & $cmbBarrack3 & "#" & $cmbBarrack4)
 	_GUI_Value_STATE("SHOW", Eval("lblBarrack1") & "#" & Eval("lblBarrack2") & "#" & Eval("lblBarrack3") & "#" & Eval("lblBarrack4"))
-EndFunc   ;==>ShowBarrackControls
+EndFunc	;==>ShowBarrackControls
+
+Func btnClrElixirValues()
+	If _GUICtrlComboBox_GetCurSel($cmbTroopComp) <> 10 Then
+		For $i = 0 To UBound($TroopName) - 1
+			GUICtrlSetData(Eval("txtNum" & $TroopName[$i]), "0")
+		Next
+	Else
+		For $i = 0 To UBound($TroopName) - 1
+			GUICtrlSetData(Eval("txtWar" & $TroopName[$i]), "0")
+		Next
+	EndIf
+	lblTotalCount()
+EndFunc
+
+Func btnClrDElixirValues()
+	If _GUICtrlComboBox_GetCurSel($cmbDarkTroopComp) <> 3 Then
+		For $i = 0 To UBound($TroopDarkName) - 1
+			GUICtrlSetData(Eval("txtNum" & $TroopDarkName[$i]), "0")
+		Next
+	Else
+		For $i = 0 To UBound($TroopDarkName) - 1
+			GUICtrlSetData(Eval("txtWar" & $TroopDarkName[$i]), "0")
+		Next
+	EndIf
+	lblTotalCount()
+EndFunc
+
+Func btnClrElixirSpells()
+	If _GUICtrlComboBox_GetCurSel($cmbTroopComp) <> 10 Then
+		GUICtrlSetData($txtNumLightningSpell, 0)
+		GUICtrlSetData($txtNumRageSpell, 0)
+		GUICtrlSetData($txtNumHealSpell, 0)
+		GUICtrlSetData($txtNumJumpSpell, 0)
+		GUICtrlSetData($txtNumFreezeSpell, 0)
+		GUICtrlSetData($txtNumCloneSpell, 0)
+	Else
+		GUICtrlSetData($txtWarLightningSpell, 0)
+		GUICtrlSetData($txtWarRageSpell, 0)
+		GUICtrlSetData($txtWarHealSpell, 0)
+		GUICtrlSetData($txtWarJumpSpell, 0)
+		GUICtrlSetData($txtWarFreezeSpell, 0)
+		GUICtrlSetData($txtWarCloneSpell, 0)
+	EndIf
+	lblTotalCountSpell()
+EndFunc
+
+Func btnClrDElixirSpells()
+	If _GUICtrlComboBox_GetCurSel($cmbTroopComp) <> 10 Then
+		GUICtrlSetData($txtNumPoisonSpell, 0)
+		GUICtrlSetData($txtNumEarthSpell, 0)
+		GUICtrlSetData($txtNumHasteSpell, 0)
+		GUICtrlSetData($txtNumSkeletonSpell, 0)
+	Else
+		GUICtrlSetData($txtWarPoisonSpell, 0)
+		GUICtrlSetData($txtWarEarthSpell, 0)
+		GUICtrlSetData($txtWarHasteSpell, 0)
+		GUICtrlSetData($txtWarSkeletonSpell, 0)
+	EndIf
+	lblTotalCountSpell()
+EndFunc
+
+
 
 Func lblTotalCount()
-
 	Local $TotalTroopsTOtrain = 0
 	Local $ArmyCampTemp = 0
 
@@ -254,6 +398,18 @@ Func lblTotalCount()
 		$ArmyCampTemp = Floor($TotalCamp * GUICtrlRead($txtFullTroop)/100)
 	EndIf
 
+If _GUICtrlComboBox_GetCurSel($cmbTroopComp) = 10 Then
+	For $i = 0 To UBound($TroopName) - 1
+		If GUICtrlRead(Eval("txtWar" & $TroopName[$i])) > 0 then
+			$TotalTroopsTOtrain += GUICtrlRead(Eval("txtWar" & $TroopName[$i])) * $TroopHeight[$i]
+		EndIf
+	Next
+	For $i = 0 To UBound($TroopDarkName) - 1
+		If GUICtrlRead(Eval("txtWar" & $TroopDarkName[$i])) > 0 then
+			$TotalTroopsTOtrain += GUICtrlRead(Eval("txtWar" & $TroopDarkName[$i])) * $TroopDarkHeight[$i]
+		EndIf
+	Next
+Else
 	For $i = 0 To UBound($TroopName) - 1
 		If GUICtrlRead(Eval("txtNum" & $TroopName[$i])) > 0 then
 			$TotalTroopsTOtrain += GUICtrlRead(Eval("txtNum" & $TroopName[$i])) * $TroopHeight[$i]
@@ -264,123 +420,205 @@ Func lblTotalCount()
 			$TotalTroopsTOtrain += GUICtrlRead(Eval("txtNum" & $TroopDarkName[$i])) * $TroopDarkHeight[$i]
 		EndIf
 	Next
+EndIf
 
 	GUICtrlSetData($lblTotalCount, String($TotalTroopsTOtrain))
 
-	If GUICtrlRead($chkTotalCampForced) = $GUI_CHECKED And GUICtrlRead($lblTotalCount) = GUICtrlRead($txtTotalCampForced) Then
+	If GUICtrlRead($lblTotalCount) = GUICtrlRead($txtTotalCampForced) Then
 		GUICtrlSetBkColor($lblTotalCount, $COLOR_MONEYGREEN)
-	ElseIf GUICtrlRead($lblTotalCount) = $ArmyCampTemp Then
-		GUICtrlSetBkColor($lblTotalCount, $COLOR_MONEYGREEN)
-	ElseIf GUICtrlRead($lblTotalCount) > $ArmyCampTemp / 2 And GUICtrlRead($lblTotalCount) < $ArmyCampTemp Then
+	ElseIf GUICtrlRead($lblTotalCount) > GUICtrlRead($txtTotalCampForced)/2 and GUICtrlRead($lblTotalCount) < GUICtrlRead($txtTotalCampForced) Then
 		GUICtrlSetBkColor($lblTotalCount, $COLOR_ORANGE)
 	Else
 		GUICtrlSetBkColor($lblTotalCount, $COLOR_RED)
 	EndIf
 
-	If GUICtrlRead($chkTotalCampForced) = $GUI_CHECKED Then
 	GUICtrlSetData($caltotaltroops, (Floor((GUICtrlRead($lblTotalCount) / GUICtrlRead($txtTotalCampForced)) * 100) < 1 ? (GUICtrlRead($lblTotalCount) > 0 ? 1 : 0) : Floor((GUICtrlRead($lblTotalCount) / GUICtrlRead($txtTotalCampForced)) * 100)))
-	Else
-		GUICtrlSetData($caltotaltroops, (Floor((GUICtrlRead($lblTotalCount) / $ArmyCampTemp) * 100) < 1 ? (GUICtrlRead($lblTotalCount) > 0 ? 1 : 0) : Floor((GUICtrlRead($lblTotalCount) / $ArmyCampTemp) * 100)))
-	EndIf
-	
-	If GUICtrlRead($chkTotalCampForced) = $GUI_CHECKED And GUICtrlRead($lblTotalCount) > GUICtrlRead($txtTotalCampForced) Then
-		GUICtrlSetState($lbltotalprogress, $GUI_SHOW)
-	ElseIf GUICtrlRead($lblTotalCount) > $ArmyCampTemp Then 
+
+	If GUICtrlRead($lblTotalCount) > GUICtrlRead($txtTotalCampForced) Then
 		GUICtrlSetState($lbltotalprogress, $GUI_SHOW)
 	Else
 		GUICtrlSetState($lbltotalprogress, $GUI_HIDE)
 	EndIf
-	
+
 EndFunc   ;==>lblTotalCount
 
 Func lblTotalCountSpell()
 	_GUI_Value_STATE("HIDE", $groupListSpells)
+	_GUI_Value_STATE("HIDE", $groupListWarSpells)
 	; calculate $iTotalTrainSpaceSpell value
-	$iTotalTrainSpaceSpell = (GUICtrlRead($txtNumLightningSpell) * 2) + (GUICtrlRead($txtNumHealSpell) * 2) + (GUICtrlRead($txtNumRageSpell) * 2) + (GUICtrlRead($txtNumJumpSpell) * 2) + _
-			(GUICtrlRead($txtNumFreezeSpell) * 2) + (GUICtrlRead($txtNumCloneSpell) * 4) + GUICtrlRead($txtNumPoisonSpell) + GUICtrlRead($txtNumHasteSpell) + GUICtrlRead($txtNumEarthSpell) + GUICtrlRead($txtNumSkeletonSpell)
 
-	If $iTotalTrainSpaceSpell < GUICtrlRead($txtTotalCountSpell) + 1 Then
-		GUICtrlSetBkColor($txtNumLightningSpell, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($txtNumHealSpell, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($txtNumRageSpell, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($txtNumJumpSpell, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($txtNumFreezeSpell, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($txtNumCloneSpell, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($txtNumPoisonSpell, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($txtNumEarthSpell, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($txtNumHasteSpell, $COLOR_MONEYGREEN)
-		GUICtrlSetBkColor($txtNumSkeletonSpell, $COLOR_MONEYGREEN)
+	If _GUICtrlComboBox_GetCurSel($cmbTroopComp) = 10 Then
+		$iTotalTrainSpaceSpell = (GUICtrlRead($txtWarLightningSpell) * 2) + (GUICtrlRead($txtWarHealSpell) * 2) + (GUICtrlRead($txtWarRageSpell) * 2) + (GUICtrlRead($txtWarJumpSpell) * 2) + _
+			(GUICtrlRead($txtWarFreezeSpell) * 2) + (GUICtrlRead($txtWarCloneSpell) * 4) + GUICtrlRead($txtWarPoisonSpell) + GUICtrlRead($txtWarHasteSpell) + GUICtrlRead($txtWarEarthSpell) + GUICtrlRead($txtWarSkeletonSpell)
+		If $iTotalTrainSpaceSpell < GUICtrlRead($txtTotalCountSpell) + 1 Then
+			GUICtrlSetBkColor($txtWarLightningSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtWarHealSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtWarRageSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtWarJumpSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtWarFreezeSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtWarCloneSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtWarPoisonSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtWarEarthSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtWarHasteSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtWarSkeletonSpell, $COLOR_MONEYGREEN)
+		Else
+			GUICtrlSetBkColor($txtWarLightningSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtWarHealSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtWarRageSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtWarFreezeSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtWarCloneSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtWarJumpSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtWarPoisonSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtWarEarthSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtWarHasteSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtWarSkeletonSpell, $COLOR_RED)
+		EndIf
+		$iTownHallLevel = Int($iTownHallLevel)
+		If $iTownHallLevel > 4 Or $iTownHallLevel = 0 Then
+			_GUI_Value_STATE("SHOW", $groupWarLightning)
+		Else
+			GUICtrlSetData($txtWarLightningSpell, 0)
+			GUICtrlSetData($txtWarRageSpell, 0)
+			GUICtrlSetData($txtWarHealSpell, 0)
+			GUICtrlSetData($txtWarJumpSpell, 0)
+			GUICtrlSetData($txtWarFreezeSpell, 0)
+			GUICtrlSetData($txtWarCloneSpell, 0)
+			GUICtrlSetData($txtWarPoisonSpell, 0)
+			GUICtrlSetData($txtWarEarthSpell, 0)
+			GUICtrlSetData($txtWarHasteSpell, 0)
+			GUICtrlSetData($txtWarSkeletonSpell, 0)
+			GUICtrlSetData($txtTotalCountSpell, 0)
+			EndIf
+		If $iTownHallLevel > 5 Or $iTownHallLevel = 0 Then
+			_GUI_Value_STATE("SHOW", $groupWarHeal)
+		Else
+			GUICtrlSetData($txtWarRageSpell, 0)
+			GUICtrlSetData($txtWarJumpSpell, 0)
+			GUICtrlSetData($txtWarFreezeSpell, 0)
+			GUICtrlSetData($txtWarCloneSpell, 0)
+			GUICtrlSetData($txtWarPoisonSpell, 0)
+			GUICtrlSetData($txtWarEarthSpell, 0)
+			GUICtrlSetData($txtWarHasteSpell, 0)
+			GUICtrlSetData($txtWarSkeletonSpell, 0)
+		EndIf
+		If $iTownHallLevel > 6 Or $iTownHallLevel = 0 Then
+			_GUI_Value_STATE("SHOW", $groupWarRage)
+		Else
+			GUICtrlSetData($txtWarJumpSpell, 0)
+			GUICtrlSetData($txtWarFreezeSpell, 0)
+			GUICtrlSetData($txtWarCloneSpell, 0)
+			GUICtrlSetData($txtWarPoisonSpell, 0)
+			GUICtrlSetData($txtWarEarthSpell, 0)
+			GUICtrlSetData($txtWarHasteSpell, 0)
+			GUICtrlSetData($txtWarSkeletonSpell, 0)
+		EndIf
+		If $iTownHallLevel > 7 Or $iTownHallLevel = 0 Then
+			_GUI_Value_STATE("SHOW", $groupWarPoison)
+			_GUI_Value_STATE("SHOW", $groupWarEarthquake)
+		Else
+			GUICtrlSetData($txtWarJumpSpell, 0)
+			GUICtrlSetData($txtWarFreezeSpell, 0)
+			GUICtrlSetData($txtWarCloneSpell, 0)
+			GUICtrlSetData($txtWarHasteSpell, 0)
+			GUICtrlSetData($txtWarSkeletonSpell, 0)
+		EndIf
+		If $iTownHallLevel > 8 Or $iTownHallLevel = 0 Then
+			_GUI_Value_STATE("SHOW", $groupWarJumpSpell)
+			_GUI_Value_STATE("SHOW", $groupWarFreeze)
+			_GUI_Value_STATE("SHOW", $groupWarHaste)
+			_GUI_Value_STATE("SHOW", $groupWarSkeleton)
+		Else
+			GUICtrlSetData($txtWarCloneSpell, 0)
+		EndIf
+		If $iTownHallLevel > 9 Or $iTownHallLevel = 0 Then ; > 9
+			_GUI_Value_STATE("SHOW", $groupWarClone)
+		EndIf
 	Else
-		GUICtrlSetBkColor($txtNumLightningSpell, $COLOR_RED)
-		GUICtrlSetBkColor($txtNumHealSpell, $COLOR_RED)
-		GUICtrlSetBkColor($txtNumRageSpell, $COLOR_RED)
-		GUICtrlSetBkColor($txtNumFreezeSpell, $COLOR_RED)
-		GUICtrlSetBkColor($txtNumCloneSpell, $COLOR_RED)
-		GUICtrlSetBkColor($txtNumJumpSpell, $COLOR_RED)
-		GUICtrlSetBkColor($txtNumPoisonSpell, $COLOR_RED)
-		GUICtrlSetBkColor($txtNumEarthSpell, $COLOR_RED)
-		GUICtrlSetBkColor($txtNumHasteSpell, $COLOR_RED)
-		GUICtrlSetBkColor($txtNumSkeletonSpell, $COLOR_RED)
-	EndIf
-	$iTownHallLevel = Int($iTownHallLevel)
-	If $iTownHallLevel > 4 Or $iTownHallLevel = 0 Then
-		_GUI_Value_STATE("SHOW", $groupLightning)
-	Else
-		GUICtrlSetData($txtNumLightningSpell, 0)
-		GUICtrlSetData($txtNumRageSpell, 0)
-		GUICtrlSetData($txtNumHealSpell, 0)
-		GUICtrlSetData($txtNumJumpSpell, 0)
-		GUICtrlSetData($txtNumFreezeSpell, 0)
-		GUICtrlSetData($txtNumCloneSpell, 0)
-		GUICtrlSetData($txtNumPoisonSpell, 0)
-		GUICtrlSetData($txtNumEarthSpell, 0)
-		GUICtrlSetData($txtNumHasteSpell, 0)
-		GUICtrlSetData($txtNumSkeletonSpell, 0)
-		GUICtrlSetData($txtTotalCountSpell, 0)
-	EndIf
-	If $iTownHallLevel > 5 Or $iTownHallLevel = 0 Then
-		_GUI_Value_STATE("SHOW", $groupHeal)
-	Else
-		GUICtrlSetData($txtNumRageSpell, 0)
-		GUICtrlSetData($txtNumJumpSpell, 0)
-		GUICtrlSetData($txtNumFreezeSpell, 0)
-		GUICtrlSetData($txtNumCloneSpell, 0)
-		GUICtrlSetData($txtNumPoisonSpell, 0)
-		GUICtrlSetData($txtNumEarthSpell, 0)
-		GUICtrlSetData($txtNumHasteSpell, 0)
-		GUICtrlSetData($txtNumSkeletonSpell, 0)
-	EndIf
-	If $iTownHallLevel > 6 Or $iTownHallLevel = 0 Then
-		_GUI_Value_STATE("SHOW", $groupRage)
-	Else
-		GUICtrlSetData($txtNumJumpSpell, 0)
-		GUICtrlSetData($txtNumFreezeSpell, 0)
-		GUICtrlSetData($txtNumCloneSpell, 0)
-		GUICtrlSetData($txtNumPoisonSpell, 0)
-		GUICtrlSetData($txtNumEarthSpell, 0)
-		GUICtrlSetData($txtNumHasteSpell, 0)
-		GUICtrlSetData($txtNumSkeletonSpell, 0)
-	EndIf
-	If $iTownHallLevel > 7 Or $iTownHallLevel = 0 Then
-		_GUI_Value_STATE("SHOW", $groupPoison)
-		_GUI_Value_STATE("SHOW", $groupEarthquake)
-	Else
-		GUICtrlSetData($txtNumJumpSpell, 0)
-		GUICtrlSetData($txtNumFreezeSpell, 0)
-		GUICtrlSetData($txtNumCloneSpell, 0)
-		GUICtrlSetData($txtNumHasteSpell, 0)
-		GUICtrlSetData($txtNumSkeletonSpell, 0)
-	EndIf
-	If $iTownHallLevel > 8 Or $iTownHallLevel = 0 Then
-		_GUI_Value_STATE("SHOW", $groupJumpSpell)
-		_GUI_Value_STATE("SHOW", $groupFreeze)
-		_GUI_Value_STATE("SHOW", $groupHaste)
-		_GUI_Value_STATE("SHOW", $groupSkeleton)
-	Else
-		GUICtrlSetData($txtNumCloneSpell, 0)
-	EndIf
-	If $iTownHallLevel > 9 Or $iTownHallLevel = 0 Then
-		_GUI_Value_STATE("SHOW", $groupClone)
+		$iTotalTrainSpaceSpell = (GUICtrlRead($txtNumLightningSpell) * 2) + (GUICtrlRead($txtNumHealSpell) * 2) + (GUICtrlRead($txtNumRageSpell) * 2) + (GUICtrlRead($txtNumJumpSpell) * 2) + _
+				(GUICtrlRead($txtNumFreezeSpell) * 2) + (GUICtrlRead($txtNumCloneSpell) * 4) + GUICtrlRead($txtNumPoisonSpell) + GUICtrlRead($txtNumHasteSpell) + GUICtrlRead($txtNumEarthSpell) + GUICtrlRead($txtNumSkeletonSpell)
+		If $iTotalTrainSpaceSpell < GUICtrlRead($txtTotalCountSpell) + 1 Then
+			GUICtrlSetBkColor($txtNumLightningSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtNumHealSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtNumRageSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtNumJumpSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtNumFreezeSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtNumCloneSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtNumPoisonSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtNumEarthSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtNumHasteSpell, $COLOR_MONEYGREEN)
+			GUICtrlSetBkColor($txtNumSkeletonSpell, $COLOR_MONEYGREEN)
+		Else
+			GUICtrlSetBkColor($txtNumLightningSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtNumHealSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtNumRageSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtNumFreezeSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtNumCloneSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtNumJumpSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtNumPoisonSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtNumEarthSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtNumHasteSpell, $COLOR_RED)
+			GUICtrlSetBkColor($txtNumSkeletonSpell, $COLOR_RED)
+		EndIf
+		$iTownHallLevel = Int($iTownHallLevel)
+		If $iTownHallLevel > 4 Or $iTownHallLevel = 0 Then
+			_GUI_Value_STATE("SHOW", $groupLightning)
+		Else
+			GUICtrlSetData($txtNumLightningSpell, 0)
+			GUICtrlSetData($txtNumRageSpell, 0)
+			GUICtrlSetData($txtNumHealSpell, 0)
+			GUICtrlSetData($txtNumJumpSpell, 0)
+			GUICtrlSetData($txtNumFreezeSpell, 0)
+			GUICtrlSetData($txtNumCloneSpell, 0)
+			GUICtrlSetData($txtNumPoisonSpell, 0)
+			GUICtrlSetData($txtNumEarthSpell, 0)
+			GUICtrlSetData($txtNumHasteSpell, 0)
+			GUICtrlSetData($txtNumSkeletonSpell, 0)
+			GUICtrlSetData($txtTotalCountSpell, 0)
+		EndIf
+		If $iTownHallLevel > 5 Or $iTownHallLevel = 0 Then
+			_GUI_Value_STATE("SHOW", $groupHeal)
+		Else
+			GUICtrlSetData($txtNumRageSpell, 0)
+			GUICtrlSetData($txtNumJumpSpell, 0)
+			GUICtrlSetData($txtNumFreezeSpell, 0)
+			GUICtrlSetData($txtNumCloneSpell, 0)
+			GUICtrlSetData($txtNumPoisonSpell, 0)
+			GUICtrlSetData($txtNumEarthSpell, 0)
+			GUICtrlSetData($txtNumHasteSpell, 0)
+			GUICtrlSetData($txtNumSkeletonSpell, 0)
+		EndIf
+		If $iTownHallLevel > 6 Or $iTownHallLevel = 0 Then
+			_GUI_Value_STATE("SHOW", $groupRage)
+		Else
+			GUICtrlSetData($txtNumJumpSpell, 0)
+			GUICtrlSetData($txtNumFreezeSpell, 0)
+			GUICtrlSetData($txtNumCloneSpell, 0)
+			GUICtrlSetData($txtNumPoisonSpell, 0)
+			GUICtrlSetData($txtNumEarthSpell, 0)
+			GUICtrlSetData($txtNumHasteSpell, 0)
+			GUICtrlSetData($txtNumSkeletonSpell, 0)
+		EndIf
+		If $iTownHallLevel > 7 Or $iTownHallLevel = 0 Then
+			_GUI_Value_STATE("SHOW", $groupPoison)
+			_GUI_Value_STATE("SHOW", $groupEarthquake)
+		Else
+			GUICtrlSetData($txtNumJumpSpell, 0)
+			GUICtrlSetData($txtNumFreezeSpell, 0)
+			GUICtrlSetData($txtNumCloneSpell, 0)
+			GUICtrlSetData($txtNumHasteSpell, 0)
+			GUICtrlSetData($txtNumSkeletonSpell, 0)
+		EndIf
+		If $iTownHallLevel > 8 Or $iTownHallLevel = 0 Then
+			_GUI_Value_STATE("SHOW", $groupJumpSpell)
+			_GUI_Value_STATE("SHOW", $groupFreeze)
+			_GUI_Value_STATE("SHOW", $groupHaste)
+			_GUI_Value_STATE("SHOW", $groupSkeleton)
+		Else
+			GUICtrlSetData($txtNumCloneSpell, 0)
+		EndIf
+		If $iTownHallLevel > 9 Or $iTownHallLevel = 0 Then ; > 9
+			_GUI_Value_STATE("SHOW", $groupClone)
+		EndIf
 	EndIf
 EndFunc   ;==>lblTotalCountSpell
 
@@ -856,3 +1094,47 @@ Func IsUseCustomDarkTroopOrder()
 	If $debugsetlogTrain = 1 Then Setlog("Custom dark train order used...", $COLOR_PURPLE) ; debug
 	Return True
 EndFunc   ;==>IsUseCustomDarkTroopOrder
+;============================================
+; SmartZap from ChaCalGyn (LunaEclipse)- DEMEN
+;=============================================
+Func chkSmartLightSpell()
+    If GUICtrlRead($chkSmartLightSpell) = $GUI_CHECKED Then
+        GUICtrlSetState($chkSmartZapDB, $GUI_ENABLE)
+        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_ENABLE)
+        GUICtrlSetState($txtMinDark, $GUI_ENABLE)
+        $ichkSmartZap = 1
+    Else
+        GUICtrlSetState($chkSmartZapDB, $GUI_DISABLE)
+        GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_DISABLE)
+        GUICtrlSetState($txtMinDark, $GUI_DISABLE)
+        $ichkSmartZap = 0
+    EndIf
+EndFunc   ;==>chkSmartLightSpell
+
+Func chkSmartZapDB()
+    If GUICtrlRead($chkSmartZapDB) = $GUI_CHECKED Then
+        $ichkSmartZapDB = 1
+    Else
+        $ichkSmartZapDB = 0
+    EndIf
+EndFunc   ;==>chkSmartZapDB
+
+Func chkSmartZapSaveHeroes()
+    If GUICtrlRead($chkSmartZapSaveHeroes) = $GUI_CHECKED Then
+        $ichkSmartZapSaveHeroes = 1
+    Else
+        $ichkSmartZapSaveHeroes = 0
+    EndIf
+EndFunc   ;==>chkSmartZapSaveHeroes
+
+Func txtMinDark()
+	$itxtMinDE = GUICtrlRead($txtMinDark)
+EndFunc   ;==>txtMinDark
+;==========================END=================================
+; =========== SmartZap from ChaCalGyn (LunaEclipse) =========== - DEMEN
+;==============================================================
+
+Func btnClrNow()
+	$ClrTroops = 1
+	btnStart()
+EndFunc

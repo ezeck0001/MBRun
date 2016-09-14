@@ -27,7 +27,11 @@ Func Initiate()
 		If $DebugSetlog = 1 Or $DebugOcr = 1 Or $debugRedArea = 1 Or $DevMode = 1 Or $debugImageSave = 1 Or $debugBuildingPos = 1 Or $debugOCRdonate = 1 Then
 			SetLog(_PadStringCenter(" Warning Debug Mode Enabled! Setlog: " & $DebugSetlog & " OCR: " & $DebugOcr & " RedArea: " & $debugRedArea & " ImageSave: " & $debugImageSave & " BuildingPos: " & $debugBuildingPos & " OCRDonate: " & $debugOCRdonate, 55, "-"), $COLOR_RED)
 		EndIf
-
+		If $ichkDelayUntil = 1 Then
+			For $x = 0 to 4
+				SetLog("WARNING War Prep Delay is Checked WARNING", $COLOR_RED)
+			Next
+		EndIf
 		$AttackNow = False
 		$FirstStart = True
 		$Checkrearm = True
@@ -58,6 +62,10 @@ Func Initiate()
 		If Not $RunState Then Return
 
 		ZoomOut()
+
+		If $ichkSwitchAcc = 1 Then ; SwitchAcc - Demen
+		   InitiateSwitchAcc()
+		EndIf
 		If Not $RunState Then Return
 
 		If Not $bSearchMode Then
@@ -136,6 +144,7 @@ Func IsStopped()
 EndFunc   ;==>IsStopped
 
 Func btnStart()
+   btnUpdateProfile()					;  SwitchAcc - DEMEN
 	; decide when to run
 	EnableControls($frmBotBottom, False, $frmBotBottomCtrlState)
 	Local $RunNow = $BotAction <> $eBotNoAction
@@ -153,6 +162,7 @@ Func btnStop()
 		$RunState = False ; Exit BotStart()
 		$BotAction = $eBotStop
 	EndIf
+	$ClrTroops = 0
 EndFunc   ;==>btnStop
 
 Func btnSearchMode()
