@@ -5,7 +5,7 @@
 ; Parameters ....: None
 ; Return values .: None
 ; Author ........: Cosote (2015-12)
-; Modified ......: MR.ViPER (2016 - SecureME)
+; Modified ......:
 ; Remarks .......: This file is part of MyBot, previously known as ClashGameBot. Copyright 2015-2016
 ;                  MyBot is distributed under the terms of the GNU GPL
 ; Related .......:
@@ -235,6 +235,7 @@ Func _WinGetAndroidHandle($bFindByTitle = False)
 				EndIf
 			Next
 		EndIf
+
 
 		; search for window
 		Local $iMode = Opt("WinTitleMatchMode", -1)
@@ -1235,9 +1236,11 @@ Func AndroidAdbSendShellCommandScript($scriptFile, $variablesArray = Default, $c
 	;If $HwND <> WinGetHandle($HwND) Then Return SetError(2, 0) ; Window gone
 	AndroidAdbLaunchShellInstance()
 	If @error <> 0 Then Return SetError(3, 0)
+
 	Local $hTimer = TimerInit()
 	Local $hFileOpen = FileOpen($AdbScriptsDir & "\" & $scriptFile)
 	If $hFileOpen = -1 Then
+		SetLog("ADB script file not found: " & $scriptFile, $COLOR_RED)
 		Return SetError(5, 0)
 	EndIf
 
@@ -1315,6 +1318,7 @@ Func AndroidAdbSendShellCommandScript($scriptFile, $variablesArray = Default, $c
 		$i += 1
 	WEnd
 	$scriptFileSh = FilterFile($scriptFile)
+
 	Local $loopCount = 0
 	If $combine = True And StringLen($cmds) <= 1024 Then
 		; invoke commands now
@@ -1493,7 +1497,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 			WEnd
 		#ce
 		While $iSize < $ExpectedFileSize And TimerDiff($hTimer) < $AndroidAdbScreencapWaitFileTimeout
-			If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $filename, 2, 2, 7)
+			If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $filename, 2, 2)
 			If $hFile <> 0 Then $iSize = _WinAPI_GetFileSizeEx($hFile)
 			If $iSize >= $ExpectedFileSize Then ExitLoop
 			Sleep(10)
@@ -1593,7 +1597,7 @@ Func _AndroidScreencap($iLeft, $iTop, $iWidth, $iHeight, $iRetryCount = 0)
 		#ce
 
 		While $iSize < $ExpectedFileSize And TimerDiff($hTimer) < $AndroidAdbScreencapWaitFileTimeout
-			If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $filename, 2, 2, 7)
+			If $hFile = 0 Then $hFile = _WinAPI_CreateFile($hostPath & $filename, 2, 2)
 			If $hFile <> 0 Then $iSize = _WinAPI_GetFileSizeEx($hFile)
 			If $iSize >= $ExpectedFileSize Then ExitLoop
 			Sleep(10)

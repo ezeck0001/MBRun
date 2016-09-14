@@ -78,11 +78,14 @@ Func AfterAADBSSCMD($cmd)
 EndFunc   ;==>AfterAADBSSCMD
 
 Func DeleteOtherFoldersInSharedFolder()
+	setlog($AndroidPicturesHostPath)
 	$allFolders = _FileListToArray($AndroidPicturesHostPath, "*", 2, False)
 	;_ArrayDisplay($allFolders)
 	For $i = 1 To UBound($allFolders) - 1
 		If IsFolderInUse($allFolders[$i]) = False Then
-			DirRemove($AndroidPicturesHostPath & $allFolders[$i], 1)
+			If $AndroidPicturesHostPath <> ($AndroidPicturesHostPath & $allFolders[$i]) Then
+				DirRemove($AndroidPicturesHostPath & $allFolders[$i], 1)
+			EndIf
 		EndIf
 	Next
 EndFunc   ;==>DeleteOtherFoldersInSharedFolder
@@ -93,7 +96,9 @@ Func DeletePicturesHostFolder($isClosingBot = True)
 	;_ArrayDisplay($allFolders)
 	For $i = 1 To UBound($allFolders) - 1
 		If IsFolderInUse($allFolders[$i]) = False Then
-			DirRemove($AndroidPicturesHostPath & $allFolders[$i], 1)
+			If $AndroidPicturesHostPath <> ($AndroidPicturesHostPath & $allFolders[$i]) Then
+				DirRemove($AndroidPicturesHostPath & $allFolders[$i], 1)
+			EndIf
 		EndIf
 	Next
 	If $isClosingBot = True Then RemoveFolderFromInUseList()
@@ -177,8 +182,6 @@ Func FilterFile($scriptFile)
 	$tmpscriptFile = StringReplace($tmpscriptFile, "BlueStacks2", $replaceofBluestacks2name)
 	$tmpscriptFile = StringReplace($tmpscriptFile, "BlueStacks", $replaceofBluestacksname)
 	$tmpscriptFile = StringReplace($tmpscriptFile, "Droid4X", $replaceOfDroid4xName)
-	$tmpscriptFile = StringReplace($tmpscriptFile, "clickdrag", $clickDragFileName)
-	$tmpscriptFile = StringReplace($tmpscriptFile, ".getevent", $geteventExt)
 	Return $tmpscriptFile
 EndFunc   ;==>FilterFile
 
