@@ -189,10 +189,16 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		For $i = 0 To UBound($TroopName) - 1
 			IniReadS($tempTroop, $config, "troop", $TroopName[$i], "0")
 			Assign($TroopName[$i] & "Comp", $tempTroop)
+			IniReadS($tempTroop, $config, "troopWar", $TroopName[$i], "0") ;War Prep - Ezeck
+			Assign($TroopName[$i] & "War", $tempTroop) ;War Prep - Ezeck
+
 		Next
 		For $i = 0 To UBound($TroopDarkName) - 1
 			IniReadS($tempTroop, $config, "troop", $TroopDarkName[$i], "0")
 			Assign($TroopDarkName[$i] & "Comp", $tempTroop)
+			IniReadS($tempTroop, $config, "troopWar", $TroopDarkName[$i], "0") ;War Prep - Ezeck
+			Assign($TroopDarkName[$i] & "War", $tempTroop) ;War Prep - Ezeck
+
 		Next
 
 
@@ -204,10 +210,16 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 			IniReadS($darkBarrackTroop[$i], $config, "troop", "Darktroop" & $i + 1, "0")
 		Next
 
+;War Prep - Ezeck
+		IniReadS($ichkEmptyBarrack, $config, "troop", "chkEmptyBarrack", "0")
+		IniReadS($ichkEmptyCamp, $config, "troop", "chkEmptyCamp", "0")
+		IniReadS($ichkEmptySpells, $config, "troop", "chkEmptySpells", "0")
+		IniReadS($ichkPrepWar, $config, "troop", "chkPrepWar", "0")
+		IniReadS($ichkDelayUntil, $config, "troop", "chkDelayUntil", "0")
+		IniReadS($itxtDelayEmptyHours, $config, "troop", "txtDelayEmptyHours", "0")
+;War Prep - Ezeck
 		IniReadS($fulltroop, $config, "troop", "fullTroop", "100")
-
 		IniReadS($isldTrainITDelay, $config, "other", "TrainITDelay", "40")
-
 		IniReadS($ichkCloseWaitEnable, $config, "other", "chkCloseWaitEnable", "1")
 		IniReadS($ichkCloseWaitTrain, $config, "other", "chkCloseWaitTrain", "0")
 		IniReadS($ibtnCloseWaitStop, $config, "other", "btnCloseWaitStop", "0")
@@ -240,6 +252,18 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($iEarthSpellComp, $config, "Spells", "EarthSpell", "0")
 		IniReadS($iSkeletonSpellComp, $config, "Spells", "SkeletonSpell", "0", "Int")
 		IniReadS($iTotalCountSpell, $config, "Spells", "SpellFactory", "0")
+;War Prep - Ezeck
+		IniReadS($iLightningSpellWar, $config, "SpellsWar", "LightningSpell", "0")
+		IniReadS($iRageSpellWar, $config, "SpellsWar", "RageSpell", "0")
+		IniReadS($iHealSpellWar, $config, "SpellsWar", "HealSpell", "0")
+		IniReadS($iJumpSpellWar, $config, "SpellsWar", "JumpSpell", "0")
+		IniReadS($iFreezeSpellWar, $config, "SpellsWar", "FreezeSpell", "0")
+		IniReadS($iCloneSpellWar, $config, "SpellsWar", "CloneSpell", "0", "Int")
+		IniReadS($iPoisonSpellWar, $config, "SpellsWar", "PoisonSpell", "0")
+		IniReadS($iHasteSpellWar, $config, "SpellsWar", "HasteSpell", "0")
+		IniReadS($iEarthSpellWar, $config, "SpellsWar", "EarthSpell", "0")
+		IniReadS($iSkeletonSpellWar, $config, "SpellsWar", "SkeletonSpell", "0", "Int")
+;War Prep - Ezeck
 		$iLightningSpellComp = Int($iLightningSpellComp)
 		$iRageSpellComp = Int($iRageSpellComp)
 		$iHealSpellComp = Int($iHealSpellComp)
@@ -249,6 +273,18 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		$iHasteSpellComp = Int($iHasteSpellComp)
 		$iEarthSpellComp = Int($iEarthSpellComp)
 		$iTotalCountSpell = Int($iTotalCountSpell)
+;War Prep - Ezeck
+		$iLightningSpellWar = Int($iLightningSpellWar)
+		$iRageSpellWar = Int($iRageSpellWar)
+		$iHealSpellWar = Int($iHealSpellWar)
+		$iJumpSpellWar = Int($iJumpSpellWar)
+		$iFreezeSpellWar = Int($iFreezeSpellWar)
+		$iPoisonSpellWar = Int($iPoisonSpellWar)
+		$iHasteSpellWar = Int($iHasteSpellWar)
+		$iEarthSpellWar = Int($iEarthSpellWar)
+;War Prep - Ezeck
+
+
 
 		;======================================================================================================================
 		;Search Settings------------------------------------------------------------------------
@@ -1005,6 +1041,30 @@ Func readConfig($inputfile = $config, $partial = False) ;Reads config and sets i
 		IniReadS($iEnableSpellsWait[$LB], $config, "search", "ChkABSpellsWait", "0")
 		IniReadS($iTotalTrainSpaceSpell, $config, "search", "TotalTrainSpaceSpell", "0")
 
+; SmartZap from ChaCalGyn (LunaEclipse) - DEMEN
+		$ichkSmartZap = IniRead($config, "SmartZap", "UseSmartZap", "1")
+		$ichkSmartZapDB = IniRead($config, "SmartZap", "ZapDBOnly", "1")
+		$ichkSmartZapSaveHeroes = IniRead($config, "SmartZap", "THSnipeSaveHeroes", "1")
+		$itxtMinDE = IniRead($config, "SmartZap", "MinDE", "300")
+
+		; SwitchAcc Mode - DEMEN
+		$ichkSwitchAcc = IniRead($profile, "Switch Account", "Enable", "0")
+		$icmbTotalCoCAcc = IniRead($profile, "Switch Account", "Total Coc Account", "0")	; 0 = AutoDetect
+		$ichkSmartSwitch = IniRead($profile, "Switch Account", "Smart Switch", "1")
+		$ichkCloseTraining = Number(IniRead($profile, "Switch Account", "Sleep Combo", "0"))
+
+		$ProfileType = IniRead($config, "Switch Account", "Profile Type", "")
+		$MatchProfileAcc = IniRead($config, "Switch Account", "Match Profile Acc", "")
+
+
+		$ichkIdleAfter = IniRead($config, "Switch Account", "Idle After", "0")
+		$itxtIdleGoldLimit = IniRead($config, "Switch Account", "Idle After Gold", "7500000")
+		$itxtIdleElixerLimit = IniRead($config, "Switch Account", "Idle After Elixer", "7500000")
+		$itxtIdleDELimit = IniRead($config, "Switch Account", "Idle After DE", "1000")
+
+		; Restart Android after long search - DEMEN		
+		 $iChkRestartAndroidSearchLimit = IniRead($config, "Restart Android", "Enable", "1")
+		 $iRestartAndroidSearchLimit = IniRead($config, "Restart Android", "Restart Android Search Limit", "200")
 	Else
 		Return False
 	EndIf

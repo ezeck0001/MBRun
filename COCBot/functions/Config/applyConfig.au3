@@ -686,14 +686,52 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	_GUICtrlComboBox_SetCurSel($cmbDarkTroopComp, $iCmbDarkTroopComp)
 	For $i = 0 To UBound($TroopName) - 1
 		GUICtrlSetData(Eval("txtNum" & $TroopName[$i]), Eval($TroopName[$i] & "Comp"))
+		GUICtrlSetData(Eval("txtWar" & $TroopName[$i]), Eval($TroopName[$i] & "War")) ;War Prep - Ezeck
 	Next
 	For $i = 0 To UBound($TroopDarkName) - 1
 		GUICtrlSetData(Eval("txtNum" & $TroopDarkName[$i]), Eval($TroopDarkName[$i] & "Comp"))
+		GUICtrlSetData(Eval("txtWar" & $TroopDarkName[$i]), Eval($TroopDarkName[$i] & "War")) ;War Prep - Ezeck
 	Next
 	SetComboTroopComp()
 	SetComboDarkTroopComp()
 	lblTotalCount()
+;==============================================
+;War Prep - Ezeck \/
+;===============================================
+	If $ichkEmptyBarrack = 1 Then
+		GUICtrlSetState($chkEmptyBarrack, $GUI_CHECKED)
+	ElseIf $ichkCloseWaitTrain = 0 Then
+		GUICtrlSetState($chkEmptyBarrack, $GUI_UNCHECKED)
+	EndIf
 
+	If $ichkEmptyCamp = 1 Then
+		GUICtrlSetState($chkEmptyCamp, $GUI_CHECKED)
+	ElseIf $ichkCloseWaitTrain = 0 Then
+		GUICtrlSetState($chkEmptyCamp, $GUI_UNCHECKED)
+	EndIf
+
+	If $ichkEmptySpells = 1 Then
+		GUICtrlSetState($chkEmptySpells, $GUI_CHECKED)
+	ElseIf $ichkCloseWaitTrain = 0 Then
+		GUICtrlSetState($chkEmptySpells, $GUI_UNCHECKED)
+	EndIf
+
+	If $ichkPrepWar = 1 Then
+		GUICtrlSetState($chkPrepWar, $GUI_CHECKED)
+	ElseIf $ichkCloseWaitTrain = 0 Then
+		GUICtrlSetState($chkPrepWar, $GUI_UNCHECKED)
+	EndIf
+
+	If $ichkDelayUntil = 1 Then
+		GUICtrlSetState($chkDelayUntil, $GUI_CHECKED)
+	ElseIf $ichkCloseWaitTrain = 0 Then
+		GUICtrlSetState($chkDelayUntil, $GUI_UNCHECKED)
+	EndIf
+
+	GUICtrlSetData($txtDelayEmptyHours, Number($itxtDelayEmptyHours))
+;==============================================
+;War Prep - Ezeck /\
+;===============================================
 	_GUICtrlComboBox_SetCurSel($cmbBarrack1, $barrackTroop[0])
 	_GUICtrlComboBox_SetCurSel($cmbBarrack2, $barrackTroop[1])
 	_GUICtrlComboBox_SetCurSel($cmbBarrack3, $barrackTroop[2])
@@ -801,6 +839,24 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	GUICtrlSetData($txtNumHasteSpell, $iHasteSpellComp)
 	GUICtrlSetData($txtNumSkeletonSpell, $iSkeletonSpellComp)
 	GUICtrlSetData($txtTotalCountSpell, $iTotalCountSpell)
+;==============================================
+;War Prep - Ezeck \/
+;===============================================
+	GUICtrlSetData($txtWarLightningSpell, $iLightningSpellWar)
+	GUICtrlSetData($txtWarRageSpell, $iRageSpellWar)
+	GUICtrlSetData($txtWarHealSpell, $iHealSpellWar)
+	GUICtrlSetData($txtWarJumpSpell, $iJumpSpellWar)
+	GUICtrlSetData($txtWarFreezeSpell, $iFreezeSpellWar)
+	GUICtrlSetData($txtWarCloneSpell, $iCloneSpellWar)
+	GUICtrlSetData($txtWarPoisonSpell, $iPoisonSpellWar)
+	GUICtrlSetData($txtWarEarthSpell, $iEarthSpellWar)
+	GUICtrlSetData($txtWarHasteSpell, $iHasteSpellWar)
+	GUICtrlSetData($txtWarSkeletonSpell, $iSkeletonSpellWar)
+
+;==============================================
+;War Prep - Ezeck /\
+;===============================================
+
 	lblTotalCountSpell()
 	;btnHideElixir()
 
@@ -2579,7 +2635,94 @@ Func applyConfig($bRedrawAtExit = True) ;Applies the data from config to the con
 	EndIf
 	chkTSActivateCamps2()
 	GUICtrlSetData($txtTSArmyCamps2, $iEnableAfterArmyCamps2)
+;==================================================
+; SmartZap from ChaCalGyn (LunaEclipse) - DEMEN \/
+;==================================================
+	If $ichkSmartZap = 1 Then
+		GUICtrlSetState($chkSmartLightSpell, $GUI_CHECKED)
+		GUICtrlSetState($chkSmartZapDB, $GUI_ENABLE)
+		GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_ENABLE)
+		GUICtrlSetState($txtMinDark, $GUI_ENABLE)
+	Else
+		GUICtrlSetState($chkSmartZapDB, $GUI_DISABLE)
+		GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_DISABLE)
+		GUICtrlSetState($txtMinDark, $GUI_DISABLE)
+		GUICtrlSetState($chkSmartLightSpell, $GUI_UNCHECKED)
+	EndIf
+	If $ichkSmartZapDB = 1 Then
+		GUICtrlSetState($chkSmartZapDB, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkSmartZapDB, $GUI_UNCHECKED)
+	EndIf
+	If $ichkSmartZapSaveHeroes = 1 Then
+		GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkSmartZapSaveHeroes, $GUI_UNCHECKED)
+	EndIf
+	GUICtrlSetData($txtMinDark, $itxtMinDE)
+;==================================================
+; SmartZap from ChaCalGyn (LunaEclipse) - DEMEN /\
+;==================================================	
 
+;========================
+; SwitchAcc- DEMEN  \/
+;========================
+	Switch $ProfileType
+	Case 1
+	   GUICtrlSetState($radActiveProfile, $GUI_CHECKED)
+	Case 2
+	   GUICtrlSetState($radDonateProfile, $GUI_CHECKED)
+	Case 3
+	   GUICtrlSetState($radIdleProfile, $GUI_CHECKED)
+	EndSwitch
+
+	_GUICtrlCombobox_SetCurSel($cmbMatchProfileAcc, $MatchProfileAcc)
+
+ 	If $ichkSwitchAcc = 1 Then
+ 		GUICtrlSetState($chkSwitchAcc, $GUI_CHECKED)
+ 	Else
+ 		GUICtrlSetState($chkSwitchAcc, $GUI_UNCHECKED)
+ 	EndIf
+
+	If $ichkSmartSwitch = 1 Then
+	   GUICtrlSetState($radSmartSwitch, $GUI_CHECKED)
+ 	Else
+	   GUICtrlSetState($radNormalSwitch, $GUI_CHECKED)
+ 	EndIf
+	chkSwitchAcc()
+
+	If $ichkIdleAfter = 1 Then
+		GUICtrlSetState($chkIdleAfter, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkIdleAfter, $GUI_UNCHECKED)
+	 EndIf
+	 chkIdleAfter()
+
+	 GUICtrlSetData($txtIdleGoldLimit, $itxtIdleGoldLimit)
+	 GUICtrlSetData($txtIdleElixerLimit, $itxtIdleElixerLimit)
+	 GUICtrlSetData($txtIdleDELimit, $itxtIdleDELimit)
+
+	If $ichkCloseTraining = 1 Then
+		GUICtrlSetState($chkUseTrainingClose, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkUseTrainingClose, $GUI_UNCHECKED)
+	EndIf
+
+	_GUICtrlCombobox_SetCurSel($cmbTotalAccount, $icmbTotalCoCAcc)	; 0 = AutoDetect
+
+	If $iChkRestartAndroidSearchLimit = 1 Then
+		GUICtrlSetState($chkRestartAndroidSearchLimit, $GUI_CHECKED)
+	Else
+		GUICtrlSetState($chkRestartAndroidSearchLimit, $GUI_UNCHECKED)
+	 EndIf
+	 chkRestartAndroidSearchLimit()
+
+	 GUICtrlSetData($txtRestartAndroidSearchLimit, $iRestartAndroidSearchLimit)
+;========================
+; SwitchAcc- DEMEN  /\
+;========================
+	
+;------------Keep  As Last ------------	
 	; Reenabling window redraw - Keep this last....
 	If $bRedrawAtExit Then SetRedrawBotWindow(True)
 

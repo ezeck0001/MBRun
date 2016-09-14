@@ -1956,12 +1956,51 @@ Func saveConfig() ;Saves the controls settings to the config
 	;Troop Settings--------------------------------------------------------------------------
 	IniWriteS($config, "troop", "TroopComposition", _GUICtrlComboBox_GetCurSel($cmbTroopComp))
 	IniWriteS($config, "troop", "DarkTroopComposition", _GUICtrlComboBox_GetCurSel($cmbDarkTroopComp))
+
 	For $i = 0 To UBound($TroopName) - 1
-		IniWriteS($config, "troop", $TroopName[$i], GUICtrlRead(Eval("txtNum" & $TroopName[$i])))
+		IniWriteS($config, "troop", $TroopName[$i], GUICtrlRead(Eval("txtNum" & $TroopName[$i]))) ;War Prep Ezeck
+		IniWriteS($config, "troopWar", $TroopName[$i], GUICtrlRead(Eval("txtWar" & $TroopName[$i]))) ;War Prep Ezeck
+
 	Next
 	For $i = 0 To UBound($TroopDarkName) - 1
-		IniWriteS($config, "troop", $TroopDarkName[$i], GUICtrlRead(Eval("txtNum" & $TroopDarkName[$i])))
+		IniWriteS($config, "troop", $TroopDarkName[$i], GUICtrlRead(Eval("txtNum" & $TroopDarkName[$i]))) ;War Prep Ezeck
+		IniWriteS($config, "troopWar", $TroopDarkName[$i], GUICtrlRead(Eval("txtWar" & $TroopDarkName[$i]))) ;War Prep Ezeck
+
 	Next
+;War Prep Ezeck
+	If GUICtrlRead($chkEmptyBarrack) = $GUI_CHECKED Then
+		IniWriteS($config, "troop", "chkEmptyBarrack", 1)
+	Else
+		IniWriteS($config, "troop", "chkEmptyBarrack", 0)
+	EndIf
+
+	If GUICtrlRead($chkEmptyCamp) = $GUI_CHECKED Then
+		IniWriteS($config, "troop", "chkEmptyCamp", 1)
+	Else
+		IniWriteS($config, "troop", "chkEmptyCamp", 0)
+	EndIf
+
+	If GUICtrlRead($chkEmptySpells) = $GUI_CHECKED Then
+		IniWriteS($config, "troop", "chkEmptySpells", 1)
+	Else
+		IniWriteS($config, "troop", "chkEmptySpells", 0)
+	EndIf
+
+	If GUICtrlRead($chkPrepWar) = $GUI_CHECKED Then
+		IniWriteS($config, "troop", "chkPrepWar", 1)
+	Else
+		IniWriteS($config, "troop", "chkPrepWar", 0)
+	EndIf
+
+	If GUICtrlRead($chkDelayUntil) = $GUI_CHECKED Then
+		IniWriteS($config, "troop", "chkDelayUntil", 1)
+	Else
+		IniWriteS($config, "troop", "chkDelayUntil", 0)
+	EndIf
+
+	IniWriteS($config, "troop", "txtDelayEmptyHours", GUICtrlRead($txtDelayEmptyHours))
+;War Prep Ezeck
+
 
 	IniWriteS($config, "troop", "troop1", _GUICtrlComboBox_GetCurSel($cmbBarrack1))
 	IniWriteS($config, "troop", "troop2", _GUICtrlComboBox_GetCurSel($cmbBarrack2))
@@ -2007,6 +2046,18 @@ Func saveConfig() ;Saves the controls settings to the config
 	IniWriteS($config, "Spells", "HasteSpell", GUICtrlRead($txtNumHasteSpell))
 	IniWriteS($config, "Spells", "SkeletonSpell", GUICtrlRead($txtNumSkeletonSpell))
 	IniWriteS($config, "Spells", "SpellFactory", GUICtrlRead($txtTotalCountSpell))
+;War Prep Ezeck
+	IniWriteS($config, "SpellsWar", "LightningSpell", GUICtrlRead($txtWarLightningSpell))
+	IniWriteS($config, "SpellsWar", "RageSpell", GUICtrlRead($txtWarRageSpell))
+	IniWriteS($config, "SpellsWar", "HealSpell", GUICtrlRead($txtWarHealSpell))
+	IniWriteS($config, "SpellsWar", "JumpSpell", GUICtrlRead($txtWarJumpSpell))
+	IniWriteS($config, "SpellsWAr", "FreezeSpell", GUICtrlRead($txtWarFreezeSpell))
+	IniWriteS($config, "SpellsWar", "CloneSpell", GUICtrlRead($txtWarCloneSpell))
+	IniWriteS($config, "SpellsWar", "PoisonSpell", GUICtrlRead($txtWarPoisonSpell))
+	IniWriteS($config, "SpellsWar", "EarthSpell", GUICtrlRead($txtWarEarthSpell))
+	IniWriteS($config, "SpellsWar", "HasteSpell", GUICtrlRead($txtWarHasteSpell))
+	IniWriteS($config, "SpellsWar", "SkeletonSpell", GUICtrlRead($txtWarSkeletonSpell))
+;War Prep Ezeck
 
 	;Upgrades
 	IniWriteS($building, "upgrade", "upgradetroops", $ichkLab)
@@ -2470,6 +2521,77 @@ Func saveConfig() ;Saves the controls settings to the config
 	EndIf
 	IniWriteS($config, "search", "TotalTrainSpaceSpell", 0)
 
+	; SmartZap Settings from ChaCalGyn (LunaEclipse) - DEMEN
+	If GUICtrlRead($chkSmartLightSpell) = $GUI_CHECKED Then
+		IniWrite($config, "SmartZap", "UseSmartZap", 1)
+	Else
+		IniWrite($config, "SmartZap", "UseSmartZap", 0)
+	EndIf
+	If GUICtrlRead($chkSmartZapDB) = $GUI_CHECKED Then
+		IniWrite($config, "SmartZap", "ZapDBOnly", 1)
+	Else
+		IniWrite($config, "SmartZap", "ZapDBOnly", 0)
+	EndIf
+	If GUICtrlRead($chkSmartZapSaveHeroes) = $GUI_CHECKED Then
+		IniWrite($config, "SmartZap", "THSnipeSaveHeroes", 1)
+	Else
+		IniWrite($config, "SmartZap", "THSnipeSaveHeroes", 0)
+	EndIf
+	IniWrite($config, "SmartZap", "MinDE", GUICtrlRead($txtMinDark))
+
+	; SwitchAcc Mode - DEMEN
+	; SwitchAcc Mode - DEMEN
+
+	If GUICtrlRead($radActiveProfile) = $GUI_CHECKED Then														; 1 = Active, 2 = Donate, 3 = Idle
+		IniWrite($config, "Switch Account", "Profile Type", 1)
+		IniWrite($profile, "Profile Type", _GUICtrlCombobox_GetCurSel($cmbProfile)+1, 1)
+	 ElseIf GUICtrlRead($radDonateProfile) = $GUI_CHECKED Then
+		IniWrite($config, "Switch Account", "Profile Type", 2)
+		IniWrite($profile, "Profile Type", _GUICtrlCombobox_GetCurSel($cmbProfile)+1, 2)
+	 Else
+		IniWrite($config, "Switch Account", "Profile Type", 3)
+		IniWrite($profile, "Profile Type", _GUICtrlCombobox_GetCurSel($cmbProfile)+1, 3)
+	EndIf
+
+	IniWrite($config, "Switch Account", "Match Profile Acc", _GUICtrlCombobox_GetCurSel($cmbMatchProfileAcc))	 ; 0 = No Acc (idle), 1 = Acc 1, 2 = Acc 2, etc.
+
+	If GUICtrlRead($chkSwitchAcc) = $GUI_CHECKED Then
+		IniWrite($profile, "Switch Account", "Enable", 1)
+	Else
+		IniWrite($profile, "Switch Account", "Enable", 0)
+	EndIf
+
+	IniWrite($profile, "Switch Account", "Total Coc Account", _GUICtrlCombobox_GetCurSel($cmbTotalAccount))	; 0 = AutoDetect, 1 = 1 Acc, 2 = 2 Acc, etc.
+
+	If GUICtrlRead($radSmartSwitch) = $GUI_CHECKED Then
+	   IniWrite($profile, "Switch Account", "Smart Switch", 1)
+	Else
+	   IniWrite($profile, "Switch Account", "Smart Switch", 0)
+	EndIf
+
+	If GUICtrlRead($chkUseTrainingClose) = $GUI_CHECKED Then
+		IniWrite($profile, "Switch Account", "Sleep Combo", 1)
+	Else
+		IniWrite($profile, "Switch Account", "Sleep Combo", 0)
+	EndIf
+
+	; Idle Limit
+	If GUICtrlRead($chkIdleAfter) = $GUI_CHECKED Then
+		IniWrite($config, "Switch Account", "Idle After", 1)
+	Else
+		IniWrite($config, "Switch Account", "Idle After", 0)
+	EndIf
+	IniWrite($config, "Switch Account", "Idle After Gold", GUICtrlRead($txtIdleGoldLimit))
+	IniWrite($config, "Switch Account", "Idle After Elixer", GUICtrlRead($txtIdleElixerLimit))
+	IniWrite($config, "Switch Account", "Idle After DE", GUICtrlRead($txtIdleDELimit))
+  	; Restart Android after long search - DEMEN
+
+	If GUICtrlRead($ChkRestartAndroidSearchLimit) = $GUI_CHECKED Then
+		IniWrite($config, "Restart Android", "Enable", 1)
+	Else
+		IniWrite($config, "Restart Android", "Enable", 0)
+	EndIf
+	IniWrite($config, "Restart Android", "Restart Android Search Limit", GUICtrlRead($TxtRestartAndroidSearchlimit))
 	If $hFile <> -1 Then FileClose($hFile)
 
 EndFunc   ;==>saveConfig
