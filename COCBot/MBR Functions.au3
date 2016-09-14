@@ -103,6 +103,7 @@
 #include "functions\CreateArmy\BarracksStatus.au3"
 #include "functions\CreateArmy\CheckFullArmy.au3"
 #include "functions\CreateArmy\CheckArmyCamp.au3"
+#include "functions\CreateArmy\EmptySpellFactory.Au3"
 #include "functions\CreateArmy\getArmyCapacity.au3"
 #include "functions\CreateArmy\getArmyCCStatus.au3"
 #include "functions\CreateArmy\getArmyHeroCount.au3"
@@ -264,3 +265,9 @@
 #include "functions\Village\StarBonus.au3"
 #include "functions\Other\ClickZoneR.au3"
 #include "functions\Village\DonateStats.au3"
+; SmartZap files - from ChaCalGyn (LunaEclipse) - DEMEN
+#include "functions\MOD\drillSearch.au3"
+#include "functions\MOD\smartZap.au3"
+
+; SwitchAcc - DEMEN
+#include "functions\MOD\SwitchAcc.au3"

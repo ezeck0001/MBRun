@@ -328,6 +328,7 @@ Global $FrmBotMinimized = False ; prevents bot flickering
 
 Global $iVillageName
 Global $sProfilePath = @ScriptDir & "\Profiles"
+
 ;Global $sTemplates = @ScriptDir & "\Templates"
 Global $sPreset = @ScriptDir & "\Strategies"
 Global $aTxtLogInitText[0][6] = [[]]
@@ -859,14 +860,24 @@ Global $icmbTroopCap ;Troop Capacity
 Global $BarbComp = 30, $ArchComp = 60, $GoblComp = 10, $GiantComp = 4, $WallComp = 4, $WizaComp = 0, $MiniComp = 0, $HogsComp = 0
 Global $DragComp = 0, $BallComp = 0, $PekkComp = 0, $HealComp = 0, $ValkComp = 0, $GoleComp = 0, $WitcComp = 0, $LavaComp = 0, $BowlComp = 0
 Global $BabyDComp = 0, $MineComp = 0
+
+Global $BarbWar = 30, $ArchWar = 60, $GoblWar = 10, $GiantWar = 4, $WallWar = 4, $WizaWar = 0, $MiniWar = 0, $HogsWar = 0
+Global $DragWar = 0, $BallWar = 0, $PekkWar = 0, $HealWar = 0, $ValkWar = 0, $GoleWar = 0, $WitcWar = 0, $LavaWar = 0, $BowlWar = 0
+Global $BabyDWar = 0, $MineWar = 0
+
 Global $CurBarb = 0, $CurArch = 0, $CurGiant = 0, $CurGobl = 0, $CurWall = 0, $CurBall = 0, $CurWiza = 0, $CurHeal = 0
 Global $CurMini = 0, $CurHogs = 0, $CurValk = 0, $CurGole = 0, $CurWitc = 0, $CurLava = 0, $CurBowl = 0, $CurDrag = 0, $CurPekk = 0, $CurBabyD = 0, $CurMine = 0
+
+Global $WarBarb = 0, $WarArch = 0, $WarGiant = 0, $WarGobl = 0, $WarWall = 0, $WarBall = 0, $WarWiza = 0, $WarHeal = 0
+Global $WarMini = 0, $WarHogs = 0, $WarValk = 0, $WarGole = 0, $WarWitc = 0, $WarLava = 0, $WarBowl = 0, $WarDrag = 0, $WarPekk = 0, $WarBabyD = 0, $WarMine = 0
+
 Global $T[1] = [97]
 Global $ArmyComp
 
 ;Spell Settings
 Global $DonPois = 0, $DonEart = 0, $DonHast = 0, $DonSkel
 Global $iLightningSpellComp = 0, $iHealSpellComp = 0, $iRageSpellComp = 0, $iJumpSpellComp = 0, $iFreezeSpellComp = 0,$iCloneSpellComp = 0, $iPoisonSpellComp = 0, $iEarthSpellComp = 0, $iHasteSpellComp = 0, $iSkeletonSpellComp = 0
+Global $iLightningSpellWar = 0, $iHealSpellWar = 0, $iRageSpellWar = 0, $iJumpSpellWar = 0, $iFreezeSpellWar = 0,$iCloneSpellWar = 0, $iPoisonSpellWar = 0, $iEarthSpellWar = 0, $iHasteSpellWar = 0, $iSkeletonSpellWar = 0
 Global $CurTotalSpell = False ; True when spell count haa been read
 Global $CurLightningSpell = 0, $CurHealSpell = 0, $CurRageSpell = 0, $CurJumpSpell = 0, $CurFreezeSpell = 0, $CurCloneSpell = 0, $CurPoisonSpell = 0, $CurHasteSpell = 0, $CurEarthSpell = 0, $CurSkeletonSpell = 0
 Global $iTotalCountSpell = 0
@@ -1535,9 +1546,95 @@ Global $ichkTSActivateCamps2, $iEnableAfterArmyCamps2
 
 Global $iShouldRearm = True
 
+; SmartZap GUI variables from ChaCalGyn (LunaEclipse) - DEMEN
+Global $ichkSmartZap = 1
+Global $ichkSmartZapDB = 1
+Global $ichkSmartZapSaveHeroes = 1
+Global $itxtMinDE = 300
+; SmartZap stats from ChaCalGyn (LunaEclipse) - DEMEN
+Global $smartZapGain = 0
+Global $numLSpellsUsed = 0
+
+; SmartZap Array to hold Total Amount of DE available from Drill at each level (1-6) from ChaCalGyn (LunaEclipse) - DEMEN
+Global Const $drillLevelHold[6] = [	120, _
+												225, _
+												405, _
+												630, _
+												960, _
+												1350]
+
+; SmartZap Array to hold Amount of DE available to steal from Drills at each level (1-6) from ChaCalGyn (LunaEclipse) - DEMEN
+Global Const $drillLevelSteal[6] = [59, _
+                                    102, _
+									172, _
+									251, _
+									343, _
+									479]
+;SwitchAcc - DEMEN
+Global $profile = $sProfilePath & "\Profile.ini"
+Global $aconfig[12]
+Global $ichkSwitchAcc = 0
+
+Global $icmbTotalCoCAcc		; 0 = Auto detect, 1 = 1 account, 2 = 2 accounts
+Global $nTotalCoCAcc
+Global $ichkSmartSwitch = 1
+
+Global $ichkCloseTraining = 0
+
+Global $nCurProfile = 1
+Global $ProfileList
+Global $nTotalProfile = 1
+
+Global $ProfileType			; Type of the Current Profile, 1 = active, 2 = donate, 3 = idle
+Global $aProfileType[12]		; Type of the all Profiles, 1 = active, 2 = donate, 3 = idle
+
+Global $MatchProfileAcc		; Account match with Current Profile
+Global $aMatchProfileAcc[12]	; Accounts match with All Profiles
+
+Global $DonateSwitchCounter = 0
+
+Global $bReMatchAcc = False
+
+Global $aTimerStart[12]
+Global $aTimerEnd[12]
+Global $aRemainTrainTime[12]
+Global $aUpdateRemainTrainTime[12]
+Global $nNexProfile
+Global $nMinRemainTrain
+
+Global $iChkRestartAndroidSearchLimit
+Global $iRestartAndroidSearchLimit
+
+Global $ichkIdleAfter
+Global $itxtIdleGoldLimit
+Global $itxtIdleElixerLimit
+Global $itxtIdleDELimit
 ; Variables used on new train system | Boosted Barracks | Balanced train donated troops
 Global $BoostedButtonX = 0
 Global $BoostedButtonY = 0
+Global $TroopsToMake[12][5] = [ _
+			["Pekk", 900, 25, 0, 75], _
+			["Drag", 900, 20, 0, 60], _
+			["BabyD", 600, 10, 0, 80], _
+			["Heal", 600, 14, 0, 45], _
+			["Mine", 300, 5, 0, 85], _
+			["Ball", 300, 5, 0, 45], _
+			["Wiza", 300, 4, 0, 50], _
+			["Giant", 120, 5, 0, 30], _
+			["Wall", 60, 2, 0, 40], _
+			["Gobl", 30, 1, 0, 35], _
+			["Arch", 25, 1, 0, 25], _
+			["Barb", 20, 1, 0, 20]]
+
+Global $DtroopsToMake[7][5] = [ _
+			["Lava", 900, 30, 0, 90], _
+			["Gole", 900, 30, 0, 70], _
+			["Witc", 600, 12, 0, 80], _
+			["Bowl", 300, 6, 0, 100], _
+			["Valk", 300, 8, 0, 60], _
+			["Hogs", 120, 5, 0, 50], _
+			["Mini", 45, 2, 0, 40]]
+
 
 ; All this variables will be Redim in first Run OR if exist some changes on the barracks number
 ; Barracks queued capacity
@@ -1549,7 +1646,6 @@ Global $DarkBarrackCapacity[2]
 ; [$i][1] : Initial timer of the boosted Barrack
 Global $InitBoostTime[4][2] = [[0, 0], [0, 0], [0, 0], [0, 0]]
 Global $InitBoostTimeDark[2][2] = [[0, 0], [0, 0]]
-
 ; Barracks remaining train time
 Global $BarrackTimeRemain[4]
 Global $DarkBarrackTimeRemain[2]
@@ -1565,8 +1661,18 @@ Global $totalPossibleBoostTimesDARK = 0
 Global $totalPossibleBoostBarracksesDARK = 0
 Global $BoostedBarracksesDARK = 0
 
-;=== No variables below ! ================================================
+Global $OnlyOneTrainLoop = 0
+Global $EmptyTimer
+Global $ClrTroops = 0
+Global $DelayClrActive = 0
+Global $ichkEmptyBarrack
+Global $ichkEmptyCamp
+Global $ichkEmptySpells
+Global $ichkPrepWar
+Global $ichkDelayUntil
+Global $itxtDelayEmptyHours
 
+;=== No variables below ! ================================================
 ; early load of config
 If FileExists($config) Or FileExists($building) Then
 	readConfig()

@@ -60,37 +60,56 @@ Global $groupQueenSleeping=$IMGchkDBQueenSleepWait&"#"&$IMGchkABQueenSleepWait&"
 Global $groupWardenSleeping=$IMGchkDBWardenSleepWait&"#"&$IMGchkABWardenSleepWait&"#"&$IMGchkWardenSleepWait
 
 ;Troops Dark
-Global $groupTroopsDark=$lblMinion&"#"&$lblHogRiders&"#"&$lblValkyries&"#"&$lblGolems&"#"&$lblWitches&"#"&$lblLavaHounds&"#"&$lblBowlers&"#"&$lblTimesMinions&"#"&$lblTimesHogRiders&"#"&$lblTimesValkyries&"#"&$lblTimesGolems&"#"&$lblTimesWitches&"#"&$lblTimesLavaHounds&"#"&$lblTimesBowlers&"#"&$icnMini&"#"&$icnHogs&"#"&$icnValk&"#"&$icnGole&"#"&$icnWitc&"#"&$icnLava&"#"&$icnBowl
+Global $groupTroopsDark=$icnMini&"#"&$icnHogs&"#"&$icnValk&"#"&$icnGole&"#"&$icnWitc&"#"&$icnLava&"#"&$icnBowl
+
 ;Troops 1
-Global $groupTroops1=$grpTroops&"#"&$lblBarbarians&"#"&$lblArchers&"#"&$lblGoblins&"#"&$txtNumBarb&"#"&$txtNumArch&"#"&$txtNumGobl&"#"&$icnBarb&"#"&$icnArch&"#"&$icnGobl&"#"&$lblPercentBarbarians&"#"&$lblPercentArchers&"#"&$lblPercentGoblins&"#"&$lblTotalCount&"#"&$lblTotalTroops&"#"&$lblPercentTotal
-Global $groupTroopsBarb=$grpTroops&"#"&$lblBarbarians&"#"&$txtNumBarb&"#"&$icnBarb&"#"&$lblPercentBarbarians
-Global $groupTroopsArch=$grpTroops&"#"&$lblArchers&"#"&$txtNumArch&"#"&$icnArch&"#"&$lblPercentArchers
-Global $groupTroopsGobl=$grpTroops&"#"&$lblGoblins&"#"&$txtNumGobl&"#"&$icnGobl&"#"&$lblPercentGoblins
-Global $groupTroopsGiant=$grpOtherTroops&"#"&$lblGiants&"#"&$lblTimesGiants&"#"&$txtNumGiant&"#"&$icnGiant
-Global $groupTroopsWall=$grpOtherTroops&"#"&$lblWallBreakers&"#"&$lblTimesWallBreakers&"#"&$txtNumWall&"#"&$icnWall
+Global $groupTroops1=$grpTroops&"#"&$txtNumBarb&"#"&$txtNumArch&"#"&$txtNumGobl&"#"&$icnBarb&"#"&$icnArch&"#"&$icnGobl&"#"&$lblTotalCount&"#"&$lblTotalTroops&"#"&$lblPercentTotal
+Global $groupTroops3=$grpTroops&"#"&$txtWarBarb&"#"&$txtWarArch&"#"&$txtWarGobl&"#"&$icnBarb&"#"&$icnArch&"#"&$icnGobl&"#"&$lblTotalCount&"#"&$lblTotalTroops&"#"&$lblPercentTotal
+
+Global $groupTroopsBarb=$grpTroops&"#"&$txtNumBarb&"#"&$icnBarb
+Global $groupTroopsArch=$grpTroops&"#"&$txtNumArch&"#"&$icnArch
+Global $groupTroopsGobl=$grpTroops&"#"&$txtNumGobl&"#"&$icnGobl
+Global $groupTroopsGiant=$grpTroops&"#"&$txtNumGiant&"#"&$icnGiant
+Global $groupTroopsWall=$grpTroops&"#"&$txtNumWall&"#"&$icnWall
 Global $groupTroopsTot=$lblTotalCount&"#"&$lblTotalTroops&"#"&$lblPercentTotal
 ;Troops 2
-Global $groupTroops2=$grpOtherTroops&"#"&$lblGiants&"#"&$lblWallBreakers&"#"&$lblBalloons&"#"&$lblWizards&"#"&$lblHealers&"#"&$lblDragons&"#"&$lblPekka&"#"&$lblBabyDragons&"#"&$lblMine&"#"&$lblTimesGiants&"#"&$lblTimesWallBreakers&"#"&$lblTimesBalloons&"#"&$lblTimesWizards&"#"&$lblTimesHealers&"#"&$lblTimesDragons&"#"&$lblTimesPekka&"#"&$lblTimesBabyDragons&"#"&$lblTimesMine&"#"&$txtNumGiant&"#"&$txtNumWall&"#"&$txtNumWiza&"#"&$txtNumHeal&"#"&$txtNumBall&"#"&$txtNumDrag&"#"&$txtNumPekk&"#"&$txtNumBabyD&"#"&$txtNumMine &"#"&$icnGiant&"#"&$icnWall&"#"&$icnWiza&"#"&$icnHeal&"#"&$icnBall&"#"&$icnDrag&"#"&$icnPekk&"#"&$icnBabyD&"#"&$icnMine
+Global $groupTroops2=$grpTroops&"#"&$txtNumGiant&"#"&$txtNumWall&"#"&$txtNumWiza&"#"&$txtNumHeal&"#"&$txtNumBall&"#"&$txtNumDrag&"#"&$txtNumPekk&"#"&$txtNumBabyD&"#"&$txtNumMine &"#"&$icnGiant&"#"&$icnWall&"#"&$icnWiza&"#"&$icnHeal&"#"&$icnBall&"#"&$icnDrag&"#"&$icnPekk&"#"&$icnBabyD&"#"&$icnMine
+Global $groupTroops4=$grpTroops&"#"&$txtWarGiant&"#"&$txtWarWall&"#"&$txtWarWiza&"#"&$txtWarHeal&"#"&$txtWarBall&"#"&$txtWarDrag&"#"&$txtWarPekk&"#"&$txtWarBabyD&"#"&$txtWarMine &"#"&$icnGiant&"#"&$icnWall&"#"&$icnWiza&"#"&$icnHeal&"#"&$icnBall&"#"&$icnDrag&"#"&$icnPekk&"#"&$icnBabyD&"#"&$icnMine
 
 ;Spell Army Training
 Global $groupTxtSpeels=$txtNumLightningSpell&"#"&$txtNumHealSpell&"#"&$txtNumRageSpell&"#"&$txtNumJumpSpell&"#"&$txtNumFreezeSpell&"#"&$txtNumPoisonSpell&"#"&$txtNumEarthSpell&"#"&$txtNumHasteSpell
 Global $groupCloseWaitTrain=$chkCloseWaitTrain&"#"&$btnCloseWaitStop&"#"&$picCloseWaitTrain&"#"&$btnCloseWaitStopRandom&"#"&$picCloseWaitStop&"#"&$btnCloseWaitExact&"#"&$picCloseWaitExact&"#"&$btnCloseWaitRandom&"#"&$cmbCloseWaitRdmPercent&"#"&$lblCloseWaitRdmPercent
 
 ;Spell
-Global $groupLightning =$lblLightningIcon&"#"&$lblLightningSpell&"#"&$txtNumLightningSpell&"#"&$lblTimesLightS
-Global $groupHeal =$lblHealIcon&"#"&$lblHealSpell&"#"&$txtNumHealSpell&"#"&$lblTimesHealS
-Global $groupRage =$lblRageIcon&"#"&$lblRageSpell&"#"&$txtNumRageSpell&"#"&$lblTimesRageS
-Global $groupJumpSpell =$lblJumpSpellIcon&"#"&$lblJumpSpell&"#"&$txtNumJumpSpell&"#"&$lblTimesJumpS
-Global $groupFreeze =$lblFreezeIcon&"#"&$lblFreezeSpell&"#"&$txtNumFreezeSpell&"#"&$lblFreezeS
-Global $groupClone = $lblCloneIcon&"#"&$lblCloneSpell&"#"&$txtNumCloneSpell&"#"&$lblCloneS
+Global $groupLightning =$lblLightningIcon&"#"&$txtNumLightningSpell
+Global $groupHeal =$lblHealIcon&"#"&$txtNumHealSpell
+Global $groupRage =$lblRageIcon&"#"&$txtNumRageSpell
+Global $groupJumpSpell =$lblJumpSpellIcon&"#"&$txtNumJumpSpell
+Global $groupFreeze =$lblFreezeIcon&"#"&$txtNumFreezeSpell
+Global $groupClone = $lblCloneIcon&"#"&$txtNumCloneSpell
+
+;SpellWar
+Global $groupWarLightning =$lblLightningIcon&"#"&$txtWarLightningSpell
+Global $groupWarHeal =$lblHealIcon&"#"&$txtWarHealSpell
+Global $groupWarRage =$lblRageIcon&"#"&$txtWarRageSpell
+Global $groupWarJumpSpell =$lblJumpSpellIcon&"#"&$txtWarJumpSpell
+Global $groupWarFreeze =$lblFreezeIcon&"#"&$txtWarFreezeSpell
+Global $groupWarClone = $lblCloneIcon&"#"&$txtWarCloneSpell
 
 ;Dark Spell
-Global $groupPoison =$lblPoisonIcon&"#"&$lblPoisonSpell&"#"&$txtNumPoisonSpell&"#"&$lblTimesPoisonS
-Global $groupEarthquake =$lblEarthquakeIcon&"#"&$lblEarthquakeSpell&"#"&$txtNumEarthSpell&"#"&$lblTimesEarthquakeS
-Global $groupHaste =$lblHasteIcon&"#"&$lblHasteSpell&"#"&$txtNumHasteSpell&"#"&$lblTimesHasteS
-Global $groupSkeleton =$lblSkeletonIcon&"#"&$lblSkeletonSpell&"#"&$txtNumSkeletonSpell&"#"&$lblTimesSkeletonS
+Global $groupPoison =$lblPoisonIcon&"#"&$txtNumPoisonSpell
+Global $groupEarthquake =$lblEarthquakeIcon&"#"&$txtNumEarthSpell
+Global $groupHaste =$lblHasteIcon&"#"&$txtNumHasteSpell
+Global $groupSkeleton =$lblSkeletonIcon&"#"&$txtNumSkeletonSpell
+
+;Dark War Spell
+Global $groupWarPoison =$lblPoisonIcon&"#"&$txtWarPoisonSpell
+Global $groupWarEarthquake =$lblEarthquakeIcon&"#"&$txtWarEarthSpell
+Global $groupWarHaste =$lblHasteIcon&"#"&$txtWarHasteSpell
+Global $groupWarSkeleton =$lblSkeletonIcon&"#"&$txtWarSkeletonSpell
 
 Global $groupListSpells=$groupLightning&"#"&$groupHeal&"#"&$groupRage&"#"&$groupJumpSpell&"#"&$groupFreeze&"#"&$groupClone&"#"&$groupPoison&"#"&$groupEarthquake&"#"&$groupHaste&"#"&$groupSkeleton
+Global $groupListWarSpells=$groupWarLightning&"#"&$groupWarHeal&"#"&$groupWarRage&"#"&$groupWarJumpSpell&"#"&$groupWarFreeze&"#"&$groupWarClone&"#"&$groupWarPoison&"#"&$groupWarEarthquake&"#"&$groupWarHaste&"#"&$groupWarSkeleton
 
 ;TH Level
 Global $groupListTHLevels=$THLevels04&"#"&$THLevels05&"#"&$THLevels06&"#"&$THLevels07&"#"&$THLevels08&"#"&$THLevels09&"#"&$THLevels10&"#"&$THLevels11

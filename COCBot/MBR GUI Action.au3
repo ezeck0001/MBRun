@@ -93,6 +93,7 @@ Func BotStart()
 		EndIf
 		If Not $RunState Then Return
 		If $hWndActive = $HWnD And ($AndroidBackgroundLaunched = True Or AndroidControlAvailable())  Then ; Really?
+			$EmptyTimer = TimerInit()
 			Initiate() ; Initiate and run bot
 		Else
 			SetLog("Cannot use " & $Android & ", please check log", $COLOR_RED)

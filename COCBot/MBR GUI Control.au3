@@ -609,6 +609,15 @@ Func BotCloseRequest()
 EndFunc   ;==>BotCloseRequest
 
 Func BotClose($SaveConfig = Default, $bExit = True)
+
+	If $hMutex_Profile <> 0 Then
+		RemoveFolderFromInUseList()
+		DeletePicturesHostFolder()
+	Else
+		RegWrite($HKLM & "\SOFTWARE\MyBOT", "inUse", "REG_SZ", "")
+		DeletePicturesHostFolder()
+	EndIf
+
    If $SaveConfig = Default Then $SaveConfig = $iBotLaunchTime > 0
    $RunState = False
    $TPaused = False
@@ -638,7 +647,6 @@ Func BotClose($SaveConfig = Default, $bExit = True)
    DllCall("comctl32.dll", "int", "ImageList_Destroy", "hwnd", $hImageList)
    If $HWnD <> 0 Then ControlFocus($HWnD, "", $HWnD) ; show bot in taskbar again
    GUIDelete($frmBot)
-   DeletePicturesHostFolder()
    If $bExit = True Then Exit
 EndFunc   ;==>BotClose
 
